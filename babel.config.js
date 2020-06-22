@@ -3,6 +3,7 @@ module.exports = {
     ['@vue/app',
       {
         useBuiltIns: 'entry',
+        'corejs': 3,
         polyfills: [
           'es6.array.iterator',
           'es6.promise',
@@ -10,5 +11,10 @@ module.exports = {
         ]
       }
     ]
-  ]
+  ],
+  'env': {
+    'development': {
+      'plugins': ['dynamic-import-node']
+    }
+  }
 }
