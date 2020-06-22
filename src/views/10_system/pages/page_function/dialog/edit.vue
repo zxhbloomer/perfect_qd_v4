@@ -34,7 +34,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="页面编号：" prop="page_code">
-              <input-search v-model.trim="dataJson.tempJson.page_code" :disabled="isUpdateModel || isViewModel" @onInputSearch="handlePageOpen" />
+              <input-search v-model.trim="dataJson.tempJson.page_code" :disabled="isUpdateModel && isViewModel" @onInputSearch="handlePageOpen" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -59,7 +59,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="按钮编号：" prop="function_code">
-              <input-search v-model.trim="dataJson.tempJson.function_code" :disabled="isUpdateModel || isViewModel" @onInputSearch="handleFunctionOpen" />
+              <input-search v-model.trim="dataJson.tempJson.function_code" :disabled="isUpdateModel && isViewModel" @onInputSearch="handleFunctionOpen" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -131,6 +131,9 @@
   }
   .el-form-item .el-select {
     width: 100%;
+  }
+  .el-input.is-disabled::v-deep .el-input__inner {
+    color: #606266 !important;
   }
 </style>
 

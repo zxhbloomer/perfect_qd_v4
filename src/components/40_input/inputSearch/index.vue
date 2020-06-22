@@ -24,6 +24,12 @@
   }
 </style>
 
+<style scoped>
+  .el-input.is-disabled::v-deep .el-input__inner {
+    color: #606266 !important;
+  }
+</style>
+
 <script>
 export default {
   name: 'InputSearch',
