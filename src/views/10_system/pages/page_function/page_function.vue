@@ -459,7 +459,6 @@ export default {
     doInsertModelCallBack(val) {
       if (val.return_flag) {
         this.popSettings.one.visible = false
-        debugger
         // 设置到table中绑定的json数据源
         this.dataJson.listData.push(val.data.data)
         this.$notify({

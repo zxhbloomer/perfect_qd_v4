@@ -281,7 +281,6 @@ export default {
     }
   },
   created() {
-    debugger
     this.initShow()
   },
   mounted() {

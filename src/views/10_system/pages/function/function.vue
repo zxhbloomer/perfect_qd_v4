@@ -56,7 +56,7 @@
           <span>{{ (dataJson.searchForm.pageCondition.current - 1) * dataJson.searchForm.pageCondition.size + scope.$index + 1 }}</span>
         </template>
       </el-table-column>
-      <el-table-column v-if="!meDialogStatus" :auto-fit="true" header-align="center" show-overflow-tooltip min-width="150" prop="code" label="按钮编号" />
+      <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip min-width="150" prop="code" label="按钮编号" />
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip min-width="150" prop="name" label="按钮名称" />
       <el-table-column show-overflow-tooltip min-width="80" prop="sort" label="排序">
         <template v-slot="scope">
