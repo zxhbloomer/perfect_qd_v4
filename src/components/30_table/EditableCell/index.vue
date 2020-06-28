@@ -120,12 +120,12 @@ export default {
   methods: {
     onFieldClick() {
       this.editMode = true
-      // this.$nextTick(() => {
-      //   const inputRef = this.$refs.input
-      //   if (inputRef) {
-      //     inputRef.focus()
-      //   }
-      // })
+      this.$nextTick(() => {
+        const inputRef = this.$refs.input
+        if (inputRef) {
+          inputRef.focus()
+        }
+      })
     },
     onInputExit() {
       this.editMode = false
