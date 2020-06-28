@@ -1,5 +1,5 @@
 <template>
-  <div class="el-input--mini el-input__inner" @click="onFieldClick">
+  <div class="el-input__inner perfect_edit_cell" @click="onFieldClick">
     <el-tooltip
       :placement="toolTipPlacement"
       :open-delay="toolTipDelay"
@@ -45,6 +45,16 @@
 
   </div>
 </template>
+
+<style scoped>
+  .perfect_edit_cell {
+    height: 28px;
+    line-height: 28px;
+    cursor: pointer;
+    border-color:#1a90ff;
+  }
+</style>
+
 <script>
 export default {
   name: 'EditableCell',

@@ -65,7 +65,7 @@
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="120" :sort-orders="settings.sortOrders" prop="function_code" label="按钮编号" />
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="120" :sort-orders="settings.sortOrders" prop="function_name" label="按钮名称" />
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="200" :sort-orders="settings.sortOrders" prop="perms" label="权限标识" />
-      <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="100" :sort-orders="settings.sortOrders" prop="sort" label="排序">
+      <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="100" :sort-orders="settings.sortOrders" prop="sort" label="排序" class-name="perfect_edit_column">
         <template v-slot="{row}">
           <editable-cell v-model="row.sort" :show-input="row.edit_cell_model">
             <span slot="edit-cell-content">{{ row.sort }}</span>
@@ -96,6 +96,10 @@
 </template>
 
 <style scoped>
+  .el-table ::v-deep .perfect_edit_column .cell  {
+    padding-left:0px ;
+    padding-right:3px ;
+  }
   .floatRight {
     float: right;
   }
