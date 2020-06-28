@@ -65,6 +65,7 @@
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="120" :sort-orders="settings.sortOrders" prop="function_code" label="按钮编号" />
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="120" :sort-orders="settings.sortOrders" prop="function_name" label="按钮名称" />
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="200" :sort-orders="settings.sortOrders" prop="perms" label="权限标识" />
+      <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="100" :sort-orders="settings.sortOrders" prop="sort" label="排序" />
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="150" :sort-orders="settings.sortOrders" prop="u_name" label="更新人" />
       <el-table-column header-align="center" show-overflow-tooltip sortable="custom" :sort-orders="settings.sortOrders" min-width="200" prop="u_time" label="更新时间">
         <template v-slot="scope">

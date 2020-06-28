@@ -68,6 +68,13 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="排序：" prop="sort">
+              <el-input v-model.trim="dataJson.tempJson.sort" />
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-alert
           title="权限信息"
           type="info"
@@ -185,6 +192,7 @@ export default {
           page_perms: '',
           function_code: '',
           function_name: undefined,
+          sort: undefined,
           perms: '',
           dbversion: 0
         },
@@ -228,6 +236,7 @@ export default {
           page_perms: [{ required: true, message: '请选择页面', trigger: 'change' }],
           function_code: [{ required: true, message: '请选择按钮', trigger: 'change' }],
           function_name: [{ required: true, message: '请选择按钮', trigger: 'change' }],
+          sort: [{ required: true, message: '请输入排序字段', trigger: 'change' }],
           perms: [{ required: true, message: '权限标识为必须输入字段', trigger: 'change' }]
         }
       },
@@ -492,6 +501,7 @@ export default {
       this.dataJson.tempJson.function_id = this.popSettings.two.selectedDataJson.id
       this.dataJson.tempJson.function_code = this.popSettings.two.selectedDataJson.code
       this.dataJson.tempJson.function_name = this.popSettings.two.selectedDataJson.name
+      this.dataJson.tempJson.sort = this.popSettings.two.selectedDataJson.sort
       this.dataJson.tempJson.perms = this.dataJson.tempJson.page_perms + ':' + this.dataJson.tempJson.function_code
       this.popSettings.two.visible = false
     },
