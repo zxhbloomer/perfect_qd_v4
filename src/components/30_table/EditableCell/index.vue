@@ -1,25 +1,19 @@
 <template>
-  <div class="edit-cell" @click="onFieldClick">
+  <div @click="onFieldClick">
     <el-tooltip
-      v-if="!editMode && !showInput"
       :placement="toolTipPlacement"
       :open-delay="toolTipDelay"
       :content="toolTipContent"
     >
-      <div @keyup.enter="onFieldClick">
+      <div v-popover:popover @keyup.enter="onFieldClick">
         <slot name="edit-cell-content" />
       </div>
     </el-tooltip>
-
     <el-popover
-      v-if="editMode || showInput"
-      ref="edit_cell_popover"
-      placement="top"
-      :value="editMode || showInput"
+      ref="popover"
       title="快速编辑"
       width="250"
       popper-class="perfect_popper"
-      trigger="manual"
     >
       <el-form
         :inline="true"
@@ -27,7 +21,7 @@
         label-position="getLabelPosition()"
       >
         <el-form-item label="">
-          <!-- <component
+          <component
             :is="editableComponent"
             v-if="editMode || showInput"
             ref="input"
@@ -39,8 +33,7 @@
             v-on="listeners"
           >
             <slot name="edit-component-slot" />
-          </component> -->
-          <el-input v-model.trim="model" clearable placeholder="集团编号" />
+          </component>
         </el-form-item>
         <el-divider />
         <div style="text-align: right; margin: 0">
@@ -117,12 +110,12 @@ export default {
   methods: {
     onFieldClick() {
       this.editMode = true
-      this.$nextTick(() => {
-        const inputRef = this.$refs.input
-        if (inputRef) {
-          inputRef.focus()
-        }
-      })
+      // this.$nextTick(() => {
+      //   const inputRef = this.$refs.input
+      //   if (inputRef) {
+      //     inputRef.focus()
+      //   }
+      // })
     },
     onInputExit() {
       this.editMode = false
