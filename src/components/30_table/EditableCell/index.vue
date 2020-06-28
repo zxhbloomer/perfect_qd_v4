@@ -1,5 +1,5 @@
 <template>
-  <div @click="onFieldClick">
+  <div class="el-input--mini el-input__inner" @click="onFieldClick">
     <el-tooltip
       :placement="toolTipPlacement"
       :open-delay="toolTipDelay"
