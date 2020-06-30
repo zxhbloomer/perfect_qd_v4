@@ -11,7 +11,7 @@
           <slot name="edit-cell-content" />
         </div>
       </el-tooltip>
-      <div>
+      <div :v-if="editMode || showInput">
         <el-popover
           ref="popover"
           :v-if="editMode || showInput"
@@ -29,7 +29,7 @@
                 :is="editableComponent"
                 v-if="editMode || showInput"
                 ref="input"
-                v-model="model"
+                v-model.trim="dataJson.form.data"
                 v-popover:edit_cell_popover
                 v-bind="$attrs"
                 @focus="onFieldClick"
@@ -40,7 +40,7 @@
             </el-form-item>
             <el-divider />
             <div style="text-align: right; margin: 0">
-              <el-button type="text">重置</el-button>
+              <el-button type="text" @click="handleReset">重置</el-button>
               <el-button type="primary" @click="handleSubmit">提交</el-button>
             </div>
           </el-form>
@@ -99,6 +99,10 @@ export default {
     editableComponent: {
       type: String,
       default: 'el-input'
+    },
+    rowData: {
+      type: Object,
+      default: null
     }
   },
   data() {
@@ -106,7 +110,7 @@ export default {
       editMode: false,
       dataJson: {
         form: {
-          sort: undefined
+          data: undefined
         }
       },
       settings: {
@@ -115,17 +119,20 @@ export default {
     }
   },
   computed: {
-    model: {
-      get() {
-        return this.value
-      },
-      set(val) {
-        this.$emit('input', val)
-      }
-    }
+    // model: {
+    //   get() {
+    //     return this.value
+    //   },
+    //   set(val) {
+    //     this.$emit('input', val)
+    //   }
+    // }
+  },
+  created() {
   },
   methods: {
     onFieldClick() {
+      this.dataJson.form.data = this.value
       this.settings.showModal = true
       this.editMode = true
       this.$nextTick(() => {
@@ -140,6 +147,17 @@ export default {
     },
     handleSubmit() {
       this.$refs.popover.doClose()
+      this.settings.showModal = false
+      this.$emit('closeMeOk', this.rowData, this.dataJson.form.data)
+    },
+    handleReset() {
+      this.dataJson.form.data = this.value
+      this.$nextTick(() => {
+        const inputRef = this.$refs.input
+        if (inputRef) {
+          inputRef.focus()
+        }
+      })
     }
   }
 }

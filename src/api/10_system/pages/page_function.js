@@ -25,6 +25,18 @@ export function updateApi(data) {
 }
 
 /**
+ * 更新指定字段的api
+ * @param {*} data
+ */
+export function updateAssignApi(data) {
+  return request({
+    url: '/api/v1/sys/pages_fun/save_assign',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 插入api
  * @param {*} data
  */
@@ -47,3 +59,4 @@ export function realDeleteSelectionApi(data) {
     data
   })
 }
+

@@ -67,7 +67,7 @@
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="200" :sort-orders="settings.sortOrders" prop="perms" label="权限标识" />
       <el-table-column :auto-fit="true" header-align="center" show-overflow-tooltip sortable="custom" min-width="100" :sort-orders="settings.sortOrders" prop="sort" label="排序" class-name="perfect_edit_column">
         <template v-slot="{row}">
-          <editable-cell v-model="row.sort" :show-input="row.edit_cell_model">
+          <editable-cell v-model="row.sort" :row-data="row" :show-input="row.edit_cell_model" @closeMeOk="handleSortUpdate">
             <span slot="edit-cell-content">{{ row.sort }}</span>
           </editable-cell>
         </template>
@@ -118,6 +118,7 @@ import Pagination from '@/components/Pagination'
 import editDialog from '@/views/10_system/pages/page_function/dialog/edit'
 import deepCopy from 'deep-copy'
 import EditableCell from '@/components/30_table/EditableCell'
+import { updateAssignApi } from '@/api/10_system/pages/page_function'
 
 export default {
   components: { Pagination, editDialog, EditableCell },
@@ -534,9 +535,36 @@ export default {
           duration: this.settings.duration
         })
       }
-    }
+    },
     // ------------------编辑弹出框 end--------------------
-
+    handleSortUpdate(oldRow, val) {
+      if (oldRow.sort === val) {
+        return
+      }
+      // 开始更新
+      this.settings.loading = true
+      updateAssignApi({ id: oldRow.id, dbversion: oldRow.dbversion, sort: val }).then((_data) => {
+        // 设置到table中绑定的json数据源
+        this.dataJson.listData.splice(this.dataJson.rowIndex, 1, _data.data)
+        // 设置到currentjson中
+        this.dataJson.currentJson = Object.assign({}, _data.data)
+        this.$notify({
+          title: '更新处理成功',
+          message: _data.message,
+          type: 'success',
+          duration: this.settings.duration
+        })
+      }, (_error) => {
+        this.$notify({
+          title: '更新处理失败',
+          message: _error.message,
+          type: 'error',
+          duration: this.settings.duration
+        })
+      }).finally(() => {
+        this.settings.loading = false
+      })
+    }
   }
 }
 </script>
