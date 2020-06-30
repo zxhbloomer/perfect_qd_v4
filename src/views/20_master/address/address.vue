@@ -81,7 +81,7 @@
 
 <script>
 import constants_program from '@/common/constants/constants_program'
-import { getListApi, exportAllApi, exportSelectionApi, realDeleteSelectionApi } from '@/api/20_master/address/address'
+import { getListApi, realDeleteSelectionApi } from '@/api/20_master/address/address'
 import resizeMixin from './addressResizeHandlerMixin'
 import Pagination from '@/components/Pagination'
 import deepCopy from 'deep-copy'
@@ -276,30 +276,6 @@ export default {
         // 部分数据导出
         this.handleExportSelectionData()
       }
-    },
-    // 全部数据导出
-    handleExportAllData() {
-      // loading
-      this.settings.listLoading = true
-      // 开始导出
-      exportAllApi(this.dataJson.searchForm).then(response => {
-      }).finally(() => {
-        this.settings.listLoading = false
-      })
-    },
-    // 部分数据导出
-    handleExportSelectionData() {
-      // loading
-      this.settings.listLoading = true
-      const selectionJson = []
-      this.dataJson.multipleSelection.forEach(function(value, index, array) {
-        selectionJson.push({ 'id': value.id })
-      })
-      // 开始导出
-      exportSelectionApi(selectionJson).then(response => {
-      }).finally(() => {
-        this.settings.listLoading = false
-      })
     },
     // 点击按钮 复制新增
     handleCopyInsert() {
