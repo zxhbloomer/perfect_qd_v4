@@ -1,52 +1,66 @@
 <template>
-  <div class="el-input__inner perfect_edit_cell" @click="onFieldClick">
-    <el-tooltip
-      :placement="toolTipPlacement"
-      :open-delay="toolTipDelay"
-      :content="toolTipContent"
-    >
-      <div v-popover:popover @keyup.enter="onFieldClick">
-        <slot name="edit-cell-content" />
-      </div>
-    </el-tooltip>
-    <div>
-      <el-popover
-        ref="popover"
-        title="快速编辑"
-        width="250"
-        popper-class="perfect_popper"
+  <div>
+    <div v-if="settings.showModal" class="modal_class" @click="settings.showModal=false" />
+    <div class="el-input__inner perfect_edit_cell" @click="onFieldClick">
+      <el-tooltip
+        :placement="toolTipPlacement"
+        :open-delay="toolTipDelay"
+        :content="toolTipContent"
       >
-        <el-form
-          :inline="true"
-          :model="dataJson.form"
-          label-position="getLabelPosition()"
+        <div v-popover:popover @keyup.enter="onFieldClick">
+          <slot name="edit-cell-content" />
+        </div>
+      </el-tooltip>
+      <div>
+        <el-popover
+          ref="popover"
+          :v-if="editMode || showInput"
+          title="快速编辑"
+          width="250"
+          popper-class="perfect_popper"
         >
-          <el-form-item label="">
-            <component
-              :is="editableComponent"
-              v-if="editMode || showInput"
-              ref="input"
-              v-model="model"
-              v-popover:edit_cell_popover
-              v-bind="$attrs"
-              @focus="onFieldClick"
-              @keyup.enter.native="onInputExit"
-            >
-              <slot name="edit-component-slot" />
-            </component>
-          </el-form-item>
-          <el-divider />
-          <div style="text-align: right; margin: 0">
-            <el-button type="text">重置</el-button>
-            <el-button type="primary" @click="handleSubmit">提交</el-button>
-          </div>
-        </el-form>
-      </el-popover>
+          <el-form
+            :inline="true"
+            :model="dataJson.form"
+            label-position="getLabelPosition()"
+          >
+            <el-form-item label="">
+              <component
+                :is="editableComponent"
+                v-if="editMode || showInput"
+                ref="input"
+                v-model="model"
+                v-popover:edit_cell_popover
+                v-bind="$attrs"
+                @focus="onFieldClick"
+                @keyup.enter.native="onInputExit"
+              >
+                <slot name="edit-component-slot" />
+              </component>
+            </el-form-item>
+            <el-divider />
+            <div style="text-align: right; margin: 0">
+              <el-button type="text">重置</el-button>
+              <el-button type="primary" @click="handleSubmit">提交</el-button>
+            </div>
+          </el-form>
+        </el-popover>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
+  .modal_class {
+    background-color: #000;
+    opacity: 0.5;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1400
+  }
   .perfect_edit_cell {
     height: 28px;
     line-height: 28px;
@@ -94,6 +108,9 @@ export default {
         form: {
           sort: undefined
         }
+      },
+      settings: {
+        showModal: false
       }
     }
   },
@@ -109,6 +126,7 @@ export default {
   },
   methods: {
     onFieldClick() {
+      this.settings.showModal = true
       this.editMode = true
       this.$nextTick(() => {
         const inputRef = this.$refs.input
