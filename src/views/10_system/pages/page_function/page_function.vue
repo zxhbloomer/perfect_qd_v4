@@ -112,7 +112,7 @@
 </style>
 
 <script>
-import { getListApi, realDeleteSelectionApi, exportAllApi, exportSelectionApi } from '@/api/10_system/pages/page_function'
+import { getListApi, realDeleteSelectionApi } from '@/api/10_system/pages/page_function'
 import resizeMixin from './page_functionResizeHandlerMixin'
 import Pagination from '@/components/Pagination'
 import editDialog from '@/views/10_system/pages/page_function/dialog/edit'
@@ -279,30 +279,6 @@ export default {
         // 部分数据导出
         this.handleExportSelectionData()
       }
-    },
-    // 全部数据导出
-    handleExportAllData() {
-      // loading
-      this.settings.loading = true
-      // 开始导出
-      exportAllApi(this.dataJson.searchForm).then(response => {
-      }).finally(() => {
-        this.settings.loading = false
-      })
-    },
-    // 部分数据导出
-    handleExportSelectionData() {
-      // loading
-      this.settings.loading = true
-      const selectionJson = []
-      this.dataJson.multipleSelection.forEach(function(value, index, array) {
-        selectionJson.push({ 'id': value.id })
-      })
-      // 开始导出
-      exportSelectionApi(selectionJson).then(response => {
-      }).finally(() => {
-        this.settings.loading = false
-      })
     },
     handleCurrentChange(row) {
       this.dataJson.currentJson = Object.assign({}, row) // copy obj
