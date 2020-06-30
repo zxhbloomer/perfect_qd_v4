@@ -9,39 +9,40 @@
         <slot name="edit-cell-content" />
       </div>
     </el-tooltip>
-    <el-popover
-      ref="popover"
-      title="快速编辑"
-      width="250"
-      popper-class="perfect_popper"
-    >
-      <el-form
-        :inline="true"
-        :model="dataJson.form"
-        label-position="getLabelPosition()"
+    <div>
+      <el-popover
+        ref="popover"
+        title="快速编辑"
+        width="250"
+        popper-class="perfect_popper"
       >
-        <el-form-item label="">
-          <component
-            :is="editableComponent"
-            v-if="editMode || showInput"
-            ref="input"
-            v-model="model"
-            v-popover:edit_cell_popover
-            v-bind="$attrs"
-            @focus="onFieldClick"
-            @keyup.enter.native="onInputExit"
-          >
-            <slot name="edit-component-slot" />
-          </component>
-        </el-form-item>
-        <el-divider />
-        <div style="text-align: right; margin: 0">
-          <el-button type="text">重置</el-button>
-          <el-button type="primary" @click="handleSubmit">提交</el-button>
-        </div>
-      </el-form>
-    </el-popover>
-
+        <el-form
+          :inline="true"
+          :model="dataJson.form"
+          label-position="getLabelPosition()"
+        >
+          <el-form-item label="">
+            <component
+              :is="editableComponent"
+              v-if="editMode || showInput"
+              ref="input"
+              v-model="model"
+              v-popover:edit_cell_popover
+              v-bind="$attrs"
+              @focus="onFieldClick"
+              @keyup.enter.native="onInputExit"
+            >
+              <slot name="edit-component-slot" />
+            </component>
+          </el-form-item>
+          <el-divider />
+          <div style="text-align: right; margin: 0">
+            <el-button type="text">重置</el-button>
+            <el-button type="primary" @click="handleSubmit">提交</el-button>
+          </div>
+        </el-form>
+      </el-popover>
+    </div>
   </div>
 </template>
 
