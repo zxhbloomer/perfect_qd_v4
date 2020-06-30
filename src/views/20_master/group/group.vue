@@ -295,6 +295,7 @@ export default {
     handleSearch() {
       // 查询
       this.dataJson.searchForm.pageCondition.current = 1
+      this.dataJson.paging.current = 1
       this.getDataList()
       // 清空选择
       this.dataJson.multipleSelection = []
