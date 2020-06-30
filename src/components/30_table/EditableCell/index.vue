@@ -30,7 +30,6 @@
             v-bind="$attrs"
             @focus="onFieldClick"
             @keyup.enter.native="onInputExit"
-            v-on="listeners"
           >
             <slot name="edit-component-slot" />
           </component>
@@ -38,7 +37,7 @@
         <el-divider />
         <div style="text-align: right; margin: 0">
           <el-button type="text">重置</el-button>
-          <el-button type="primary">提交</el-button>
+          <el-button type="primary" @click="handleSubmit">提交</el-button>
         </div>
       </el-form>
     </el-popover>
@@ -85,10 +84,6 @@ export default {
     editableComponent: {
       type: String,
       default: 'el-input'
-    },
-    closeEvent: {
-      type: String,
-      default: 'blur'
     }
   },
   data() {
@@ -109,12 +104,6 @@ export default {
       set(val) {
         this.$emit('input', val)
       }
-    },
-    listeners() {
-      return {
-        [this.closeEvent]: this.onInputExit,
-        ...this.$listeners
-      }
     }
   },
   methods: {
@@ -127,11 +116,11 @@ export default {
         }
       })
     },
-    onInputExit() {
-      this.editMode = false
-    },
     onInputChange(val) {
       this.$emit('input', val)
+    },
+    handleSubmit() {
+      this.$refs.popover.doClose()
     }
   }
 }
