@@ -217,6 +217,11 @@ export const asyncRoutes = [
             component: () => import('@/views/10_system/pages/page_function/page_function'),
             name: 'P00000210',
             meta: { title: '页面按钮维护' }
+          },
+          { path: 'menus',
+            component: () => import('@/views/20_master/menus/menu'),
+            name: 'P00000220',
+            meta: { title: '菜单维护' }
           }
         ]
       },
