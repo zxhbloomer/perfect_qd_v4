@@ -20,7 +20,7 @@
         <el-button v-popover:popover type="primary" plain icon="perfect-icon-reset" @click="doResetSearch">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-button-group v-show="!meDialogSetting.dialogStatus">
+    <el-button-group v-show="!meDialogStatus.dialogStatus">
       <el-button type="primary" icon="el-icon-circle-plus-outline" :loading="settings.listLoading" @click="handleInsert">新增菜单组</el-button>
       <el-button :disabled="!settings.btnShowStatus.showCopyInsert" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleCopyInsert">添加子菜单</el-button>
       <el-button :disabled="!settings.btnShowStatus.showUpdate" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleUpdate">修改</el-button>
@@ -60,253 +60,26 @@
           min-width="25"
         >
           <template v-slot="column_lists">
-            <div v-for="item in column_lists.row.module_info" :key="item.id">
+            <div v-for="item in column_lists.row.function_info" :key="item.id">
               <!-- 存在按钮数据时 -->
               <div v-if="item.code === button_column.code">
                 〇
               </div>
             </div>
             <!-- 不存在按钮数据时 -->
-            <div v-if="column_lists.row.module_info.length === 0">
+            <div v-if="column_lists.row.function_info.length === 0">
               -
             </div>
           </template>
         </el-table-column>
       </el-table-column>
     </el-table>
-
-    <!-- pop窗口 数据编辑:新增、修改、步骤窗体-->
-    <el-dialog
-      v-if="popSettingsData.dialogFormVisible"
-      v-el-drag-dialog
-      :title="popSettingsData.textMap[popSettingsData.dialogStatus]"
-      :visible="popSettingsData.dialogFormVisible"
-      :close-on-click-modal="false"
-      :close-on-press-escape="false"
-      :show-close="false"
-      :append-to-body="true"
-      :modal-append-to-body="false"
-      width="900px"
-    >
-      <el-form
-        ref="dataSubmitForm"
-        :rules="popSettingsData.rules"
-        :model="dataJson.tempJson"
-        label-position="rigth"
-        label-width="120px"
-        status-icon
-      >
-        <div v-show="isNewMenuGroup">
-          <el-alert title="菜单组信息" type="info" :closable="false" />
-          <br>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="菜单组编号：" prop="code">
-                <el-input v-model.trim="dataJson.tempJson.code" clearable show-word-limit />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="菜单组名称：" prop="name">
-                <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </div>
-
-        <div v-show="isNewMenu">
-          <el-alert title="上级菜单信息" type="info" :closable="false" />
-          <br>
-          <el-row>
-            <el-form-item label="上级菜单：" prop="parent_id">
-              <el-cascader
-                ref="refInsertFocus"
-                v-model="dataJson.tempJson.depth_id"
-                placeholder="请选择"
-                :options="dataJson.cascader.data"
-                filterable
-                clearable
-                :props="{ checkStrictly: true, expandTrigger: 'hover'}"
-                style="width: 100%"
-                disabled
-              />
-            </el-form-item>
-          </el-row>
-
-          <el-alert title="本菜单模块信息" type="info" :closable="false" />
-          <br>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="菜单名称：" prop="name">
-                <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit>
-                  <el-button slot="append" ref="selectOne" icon="el-icon-search" @click="handleModuleDialogClick">
-                    选择
-                  </el-button>
-                </el-input>
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="请求地址：" prop="path">
-                <el-input v-model.trim="dataJson.tempJson.path" clearable show-word-limit disabled />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="菜单类型：" prop="type">
-                <select-dict v-model="dataJson.tempJson.type" :para="CONSTANTS.DICT_SYS_MODULE_TYPE" disabled />
-              </el-form-item>
-            </el-col>
-          </el-row>
-
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="模块名称：" prop="meta_title">
-                <el-input v-model.trim="dataJson.tempJson.meta_title" clearable show-word-limit disabled />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="模块icon：" prop="meta_icon">
-                <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit disabled />
-              </el-form-item>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="路由名：" prop="route_name">
-                <el-input v-model.trim="dataJson.tempJson.route_name" clearable show-word-limit disabled />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="模块路径：" prop="meta_icon">
-                <el-input v-model.trim="dataJson.tempJson.component" clearable show-word-limit disabled />
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </div>
-
-        <!-- 修改情况 -->
-        <div v-show="isChangeModel">
-          <!-- 菜单组修改 -->
-          <div v-show="isRootNode">
-            <el-alert title="菜单组信息" type="info" :closable="false" />
-            <br>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="菜单组编号：" prop="code">
-                  <el-input v-model.trim="dataJson.tempJson.code" clearable show-word-limit :disabled="isUpdateModel" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="菜单组名称：" prop="name">
-                  <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
-          <!-- 目录修改 -->
-          <div v-show="isMENUNode || isCONTENTSNode">
-            <el-alert title="上级菜单信息" type="info" :closable="false" />
-            <br>
-            <el-row>
-              <el-form-item label="上级菜单：" prop="parent_id">
-                <el-cascader
-                  ref="refInsertFocus"
-                  v-model="dataJson.tempJson.parent_depth_id"
-                  placeholder="请选择"
-                  :options="dataJson.cascader.data"
-                  filterable
-                  clearable
-                  :props="{ checkStrictly: true, expandTrigger: 'hover'}"
-                  style="width: 100%"
-                  @change="handleCascaderChange"
-                />
-              </el-form-item>
-            </el-row>
-
-            <el-alert title="本菜单模块信息" type="info" :closable="false" />
-            <br>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="菜单名称：" prop="name">
-                  <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit>
-                    <el-button slot="append" ref="selectTwo" icon="el-icon-search" @click="handleModuleDialogClick">
-                      选择
-                    </el-button>
-                  </el-input>
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="请求地址：" prop="path">
-                  <el-input v-model.trim="dataJson.tempJson.path" clearable show-word-limit disabled />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="菜单类型：" prop="type">
-                  <select-dict v-model="dataJson.tempJson.type" :para="CONSTANTS.DICT_SYS_MODULE_TYPE" disabled />
-                </el-form-item>
-              </el-col>
-            </el-row>
-
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="模块名称：" prop="meta_title">
-                  <el-input v-model.trim="dataJson.tempJson.meta_title" clearable show-word-limit disabled />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="模块icon：" prop="meta_icon">
-                  <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit disabled />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="12">
-                <el-form-item label="路由名：" prop="route_name">
-                  <el-input v-model.trim="dataJson.tempJson.route_name" clearable show-word-limit disabled />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="模块路径：" prop="meta_icon">
-                  <el-input v-model.trim="dataJson.tempJson.component" clearable show-word-limit disabled />
-                </el-form-item>
-              </el-col>
-            </el-row>
-          </div>
-
-        </div>
-
-        <el-row v-show="isChangeModel">
-          <el-col :span="12">
-            <el-form-item label="更新人：" prop="u_name">
-              <el-input v-model.trim="dataJson.tempJson.u_id" disabled />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="更新时间：" prop="u_time">
-              <el-input v-model.trim="dataJson.tempJson.u_time" disabled />
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-divider />
-        <div class="floatLeft">
-          <el-button type="danger" :disabled="settings.listLoading || popSettingsData.btnDisabledStatus.disabledReset" @click="doReset()">重置</el-button>
-        </div>
-        <el-button plain :disabled="settings.listLoading" @click="popSettingsData.dialogFormVisible = false">取消</el-button>
-        <el-button v-show="popSettingsData.btnShowStatus.showInsert" plain type="primary" :disabled="settings.listLoading || popSettingsData.btnDisabledStatus.disabledInsert " @click="doInsert()">确定</el-button>
-        <el-button v-show="popSettingsData.btnShowStatus.showUpdate" plain type="primary" :disabled="settings.listLoading || popSettingsData.btnDisabledStatus.disabledUpdate " @click="doUpdate()">确定</el-button>
-        <el-button v-show="popSettingsData.btnShowStatus.showCopyInsert" plain type="primary" :disabled="settings.listLoading || popSettingsData.btnDisabledStatus.disabledCopyInsert " @click="doCopyInsert()">确定</el-button>
-      </div>
-    </el-dialog>
-    <module-dialog
-      :visible="popSettingsData.searchDialogDataTwo.dialogVisible"
-      @closeMeOk="handleModuleCloseOk"
-      @closeMeCancel="handleModuletCloseCancel"
+    <edit-group-dialog
+      v-if="popSettings.one.visible"
+      :visible="popSettings.one.visible"
+      :dialog-status="popSettings.one.props.dialogStatus"
+      @closeMeOk="handleEditGroupDialogCloseMeOk"
+      @closeMeCancel="handleEditGroupDialogCloseMeCancel"
     />
     <iframe id="refIframe" ref="refIframe" scrolling="no" frameborder="0" style="display:none" name="refIframe">x</iframe>
   </div>
@@ -346,18 +119,29 @@
 
 <script>
 import constants_program from '@/common/constants/constants_program'
-import { getCascaderListApi, getListApi, updateApi, addMenuGroupApi, addSubMenuApi, deleteApi, realDeleteSelectionApi } from '@/api/20_master/menus/menu'
+import { getListApi, updateApi, addSubMenuApi, deleteApi, realDeleteSelectionApi } from '@/api/20_master/menus/menu'
 import resizeMixin from './menuResizeHandlerMixin'
 import elDragDialog from '@/directive/el-drag-dialog'
 import SelectDict from '@/components/00_dict/select/SelectDict'
-import moduleDialog from '@/views/10_system/module/dialog/dialog'
+import editGroupDialog from '@/views/20_master/menus/dialog/editGroup'
 import deepCopy from 'deep-copy'
 
 export default {
   name: constants_program.P_MENU, // 页面id，和router中的name需要一致，作为缓存
-  components: { SelectDict, moduleDialog },
+  components: { SelectDict, editGroupDialog },
   directives: { elDragDialog },
   mixins: [resizeMixin],
+  props: {
+    // 自己作为弹出框时的参数
+    meDialogStatus: {
+      type: Boolean,
+      default: false
+    },
+    dataModel: {
+      type: String,
+      default: ''
+    }
+  },
   data() {
     return {
       dataJson: {
@@ -421,164 +205,29 @@ export default {
         tableHeight: this.setUIheight(),
         duration: 4000
       },
-      popSettingsData: {
-        // 弹出窗口状态名称
-        textMap: {
-          update: '修改',
-          insert: '新增',
-          copyInsert: '添加子菜单'
+      popSettings: {
+        // 弹出编辑页面
+        one: {
+          visible: false,
+          props: {
+            id: undefined,
+            data: {},
+            dialogStatus: ''
+          }
         },
-        // 按钮状态
-        btnShowStatus: {
-          showInsert: false,
-          showUpdate: false,
-          showCopyInsert: false
-        },
-        // 按钮状态：是否可用
-        btnDisabledStatus: {
-          disabledReset: false,
-          disabledInsert: false,
-          disabledUpdate: false,
-          disabledCopyInsert: false
-        },
-        // 重置按钮点击后
-        btnResetStatus: false,
-        // 以下为pop的内容：数据弹出框
-        selection: [],
-        dialogStatus: '',
-        dialogFormVisible: false,
-        // pop的check内容
-        rules: {},
-        rulesFirst: {
-          code: [{ required: true, message: '请输入菜单组编号', trigger: 'change' }],
-          name: [{ required: true, message: '请输入菜单组名称', trigger: 'change' }]
-        },
-        rulesSecond: {
-          parent_id: [{ required: true, message: '请输入上级菜单', trigger: 'change' }],
-          name: [{ required: true, message: '请选择菜单名称', trigger: 'change' }]
-        },
-        // 弹出的查询框参数设置
-        searchDialogDataOne: {
-          // 弹出框显示参数
-          dialogVisible: false,
-          // 点击确定以后返回的值
-          selectedDataJson: {}
-        },
-        // 弹出的查询框参数设置
-        searchDialogDataTwo: {
-          // 弹出框显示参数
-          dialogVisible: false,
-          // 点击确定以后返回的值
-          selectedDataJson: {}
+        two: {
+          visible: false,
+          props: {
+            data: {}
+          }
         }
-      },
-      // 导入窗口的状态
-      popSettingsImport: {
-        // 弹出窗口会否显示
-        dialogFormVisible: false,
-        // 模版文件地址
-        templateFilePath: process.env.VUE_APP_BASE_API + '/api/v1/template.html?id=P00000030',
-        // 错误数据文件
-        errorFileUrl: ''
-      },
-      meDialogSetting: {
-        program: this.$store.getters.program,
-        selectedDataJson: this.$store.getters.selectedDataJson,
-        dialogStatus: false
       }
     }
   },
   computed: {
-    // 是否为新增菜单组
-    isNewMenuGroup() {
-      if (this.popSettingsData.dialogStatus === 'insert') {
-        return true
-      } else {
-        return false
-      }
-    },
-    // 是否为新增子菜单
-    isNewMenu() {
-      if (this.popSettingsData.dialogStatus === 'copyInsert') {
-        return true
-      } else {
-        return false
-      }
-    },
-    // 是否为修改
-    isChangeModel() {
-      if (this.popSettingsData.dialogStatus === 'update') {
-        return true
-      } else {
-        return false
-      }
-    },
-    // 是否为根节点
-    isRootNode() {
-      if (this.dataJson.tempJson.type === null || this.dataJson.tempJson.type === '') {
-        return true
-      } else {
-        return false
-      }
-    },
-    // 是否为目录节点
-    isCONTENTSNode() {
-      if (this.dataJson.tempJson.type === this.CONSTANTS.DICT_SYS_MODULE_TYPE_CONTENTS) {
-        return true
-      } else {
-        return false
-      }
-    },
-    // 是否为菜单节点
-    isMENUNode() {
-      if (this.dataJson.tempJson.type === this.CONSTANTS.DICT_SYS_MODULE_TYPE_MENU) {
-        return true
-      } else {
-        return false
-      }
-    },
-    // 是否为更新模式
-    isUpdateModel() {
-      if (this.popSettingsData.dialogStatus === 'insert' || this.popSettingsData.dialogStatus === 'copyInsert') {
-        return false
-      } else {
-        return true
-      }
-    }
   },
   // 监听器
   watch: {
-    // 监听页面上面是否有修改，有修改按钮高亮
-    'dataJson.tempJson': {
-      handler(newVal, oldVal) {
-        if (this.popSettingsData.btnResetStatus === true) {
-          // 点击了重置按钮
-          this.popSettingsData.btnDisabledStatus.disabledReset = true
-          this.popSettingsData.btnDisabledStatus.disabledInsert = true
-          this.popSettingsData.btnDisabledStatus.disabledUpdate = true
-          this.popSettingsData.btnDisabledStatus.disabledCopyInsert = true
-          this.popSettingsData.btnResetStatus = false
-        } else if (this.popSettingsData.dialogFormVisible) {
-          // 有修改按钮高亮
-          this.popSettingsData.btnDisabledStatus.disabledReset = false
-          this.popSettingsData.btnDisabledStatus.disabledInsert = false
-          this.popSettingsData.btnDisabledStatus.disabledUpdate = false
-          this.popSettingsData.btnDisabledStatus.disabledCopyInsert = false
-        }
-      },
-      deep: true
-    },
-    // 弹出窗口初始化，按钮不可用
-    'popSettingsData.dialogFormVisible': {
-      handler(newVal, oldVal) {
-        if (this.popSettingsData.dialogFormVisible) {
-          this.popSettingsData.btnDisabledStatus.disabledReset = true
-          this.popSettingsData.btnDisabledStatus.disabledInsert = true
-          this.popSettingsData.btnDisabledStatus.disabledUpdate = true
-          this.popSettingsData.btnDisabledStatus.disabledCopyInsert = true
-        }
-      }
-    },
     // 选中的数据，使得导出按钮可用，否则就不可使用
     'dataJson.multipleSelection': {
       handler(newVal, oldVal) {
@@ -605,31 +254,6 @@ export default {
         }
       },
       deep: true
-    },
-    'popSettingsData.searchDialogDataTwo.selectedDataJson': {
-      handler(newVal, oldVal) {
-        if (newVal === {}) {
-          this.dataJson.tempJson.type = null
-          this.dataJson.tempJson.name = null
-          this.dataJson.tempJson.module_id = null
-          this.dataJson.tempJson.path = null
-          this.dataJson.tempJson.route_name = null
-          this.dataJson.tempJson.meta_title = null
-          this.dataJson.tempJson.meta_icon = null
-          this.dataJson.tempJson.component = null
-          this.dataJson.tempJson.affix = null
-        } else {
-          this.dataJson.tempJson.type = this.popSettingsData.searchDialogDataTwo.selectedDataJson.type
-          this.dataJson.tempJson.name = this.popSettingsData.searchDialogDataTwo.selectedDataJson.name
-          this.dataJson.tempJson.module_id = this.popSettingsData.searchDialogDataTwo.selectedDataJson.id
-          this.dataJson.tempJson.path = this.popSettingsData.searchDialogDataTwo.selectedDataJson.path
-          this.dataJson.tempJson.route_name = this.popSettingsData.searchDialogDataTwo.selectedDataJson.route_name
-          this.dataJson.tempJson.meta_title = this.popSettingsData.searchDialogDataTwo.selectedDataJson.meta_title
-          this.dataJson.tempJson.meta_icon = this.popSettingsData.searchDialogDataTwo.selectedDataJson.meta_icon
-          this.dataJson.tempJson.component = this.popSettingsData.searchDialogDataTwo.selectedDataJson.component
-          this.dataJson.tempJson.affix = this.popSettingsData.searchDialogDataTwo.selectedDataJson.affix
-        }
-      }
     }
   },
   created() {
@@ -639,17 +263,6 @@ export default {
     // 描绘完成
   },
   methods: {
-    initTempJsonOriginal() {
-      // 单条数据 json的，初始化原始数据
-      this.dataJson.tempJsonOriginal =
-      {
-        id: undefined,
-        name: '',
-        code: '',
-        descr: '',
-        dbversion: 0
-      }
-    },
     initShow() {
       // 初始化查询
       this.getDataList()
@@ -673,7 +286,7 @@ export default {
     handleRowDbClick(row) {
       this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = this.getRowIndex(row)
-      if (this.meDialogSetting.dialogStatus) {
+      if (this.meDialogStatus.dialogStatus) {
         this.$emit('rowDbClick', this.dataJson.tempJson)
       }
     },
@@ -691,11 +304,6 @@ export default {
       // 修改
       this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = _rowIndex
-      this.popSettingsData.dialogStatus = 'update'
-      this.popSettingsData.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataSubmitForm'].clearValidate()
-      })
     },
     // 删除操作
     handleDel(row) {
@@ -723,7 +331,6 @@ export default {
             type: 'success',
             duration: this.settings.duration
           })
-          this.popSettingsData.dialogFormVisible = false
         }, (_error) => {
           this.$notify({
             title: '更新处理失败',
@@ -732,7 +339,6 @@ export default {
             duration: this.settings.duration
           })
           row.is_del = !row.is_del
-          this.popSettingsData.dialogFormVisible = false
         }).finally(() => {
           this.settings.listLoading = false
         })
@@ -743,27 +349,8 @@ export default {
     // 点击按钮 新增
     handleInsert() {
       // 新增
-      this.popSettingsData.dialogStatus = 'insert'
-      // 数据初始化
-      this.initTempJsonOriginal()
-      this.dataJson.tempJson = Object.assign({}, this.dataJson.tempJsonOriginal)
-      this.$nextTick(() => {
-        this.$refs['dataSubmitForm'].clearValidate()
-      })
-      // 设置按钮
-      this.popSettingsData.btnShowStatus.showInsert = true
-      this.popSettingsData.btnShowStatus.showUpdate = false
-      this.popSettingsData.btnShowStatus.showCopyInsert = false
-      // 初始化弹出页面
-      this.doReset()
-      this.popSettingsData.dialogFormVisible = true
-      // 初始化模块选择
-      this.initModuleSelectButton()
-
-      // 控件focus
-      this.$nextTick(() => {
-        // this.$refs['selectOne'].focus()
-      })
+      this.popSettings.one.props.dialogStatus = this.PARAMETERS.STATUS_INSERT
+      this.popSettings.one.visible = true
     },
     // 点击按钮 更新
     handleUpdate() {
@@ -776,21 +363,9 @@ export default {
         return
       }
       // 修改
-      this.popSettingsData.dialogStatus = 'update'
-      this.popSettingsData.dialogFormVisible = true
+      this.popSettings.one.visible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
-      })
-      // 设置按钮
-      this.popSettingsData.btnShowStatus.showInsert = false
-      this.popSettingsData.btnShowStatus.showUpdate = true
-      this.popSettingsData.btnShowStatus.showCopyInsert = false
-      // 初始化模块选择
-      this.initModuleSelectButton()
-
-      // 控件focus
-      this.$nextTick(() => {
-        // this.$refs['selectOne'].focus()
       })
     },
     // 点击按钮 复制新增
@@ -817,22 +392,7 @@ export default {
       this.dataJson.tempJson.name = ''
 
       // 修改
-      this.popSettingsData.dialogStatus = 'copyInsert'
-      this.popSettingsData.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataSubmitForm'].clearValidate()
-      })
-      // 设置按钮
-      this.popSettingsData.btnShowStatus.showInsert = false
-      this.popSettingsData.btnShowStatus.showUpdate = false
-      this.popSettingsData.btnShowStatus.showCopyInsert = true
-      // 初始化模块选择
-      this.initModuleSelectButton()
-
-      // 复制新增时focus
-      this.$nextTick(() => {
-        // this.$refs['selectOne'].focus()
-      })
+      this.popSettings.one.visible = true
     },
     handleCurrentChange(row) {
       this.dataJson.currentJson = Object.assign({}, row) // copy obj
@@ -859,10 +419,7 @@ export default {
       getListApi(this.dataJson.searchForm).then(response => {
         // 增加对象属性，columnTypeShowIcon，columnNameShowIcon
         const recorders = response.data.menu_data
-        const newRecorders = recorders.map(v => {
-          return { ...v, columnTypeShowIcon: false, columnNameShowIcon: false }
-        })
-        this.dataJson.listData = newRecorders
+        this.dataJson.listData = recorders
         this.dataJson.menu_buttons = response.data.menu_buttons
         this.dataJson.paging = response.data.menu_data
         this.dataJson.paging.records = {}
@@ -889,7 +446,7 @@ export default {
               duration: this.settings.duration
             })
             this.getDataList()
-            this.popSettingsData.dialogFormVisible = false
+            this.popSettings.one.visible = false
           }, (_error) => {
             this.$notify({
               title: '更新处理失败',
@@ -897,7 +454,6 @@ export default {
               type: 'error',
               duration: this.settings.duration
             })
-            // this.popSettingsData.dialogFormVisible = false
           }).finally(() => {
             this.settings.listLoading = false
           })
@@ -907,69 +463,6 @@ export default {
     // 重置查询区域
     doResetSearch() {
       this.dataJson.searchForm = this.$options.data.call(this).dataJson.searchForm
-    },
-    // 重置按钮
-    doReset() {
-      this.popSettingsData.btnResetStatus = true
-      switch (this.popSettingsData.dialogStatus) {
-        case 'update':
-          // 数据初始化
-          this.dataJson.tempJson = Object.assign({}, this.dataJson.tempJsonOriginal)
-          // 初始化数据
-          // this.handleSelectOrReset()
-          // 设置控件焦点focus
-          this.$nextTick(() => {
-            // this.$refs['selectOne'].focus()
-          })
-          break
-        default:
-          // 数据初始化
-          this.dataJson.tempJson = Object.assign({}, this.dataJson.tempJsonOriginal)
-          // 设置控件焦点focus
-          this.$nextTick(() => {
-            // this.$refs['selectOne'].focus()
-          })
-          break
-      }
-
-      // 去除validate信息
-      this.$nextTick(() => {
-        this.$refs['dataSubmitForm'].clearValidate()
-      })
-    },
-    // 插入逻辑
-    doInsert() {
-      this.$refs['dataSubmitForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.dataJson.tempJson)
-          this.settings.listLoading = true
-          addMenuGroupApi(tempData).then((_data) => {
-            this.dataJson.listData.push(_data.data)
-            this.$notify({
-              title: '新增处理成功',
-              message: _data.message,
-              type: 'success',
-              duration: this.settings.duration
-            })
-            this.popSettingsData.dialogFormVisible = false
-          }, (_error) => {
-            this.$notify({
-              title: '新增处理失败',
-              message: _error.message,
-              type: 'error',
-              duration: this.settings.duration
-            })
-            // this.popSettingsData.dialogFormVisible = false
-          }).finally(() => {
-            this.settings.listLoading = false
-          })
-        }
-      })
-    },
-    // 关闭弹出窗口
-    handlCloseDialog() {
-      this.popSettingsImport.dialogFormVisible = false
-      this.popSettingsData.dialogFormVisible = false
     },
     // 获取row-key
     getRowKeys(row) {
@@ -981,56 +474,6 @@ export default {
         console.log(val, index, arr)
       })
       this.dataJson.multipleSelection = arr
-    },
-    renderHeaderIsDel: function(h, { column }) {
-      return (
-        <span>{column.label}
-          <el-tooltip
-            class='item'
-            effect='dark'
-            placement='bottom'
-          >
-            <div slot='content'>
-            可见状态提示：<br/>
-            绿色：可见  <br/>
-            红色：不可见
-            </div>
-            <svg-icon icon-class='perfect-icon-question1_btn' style='margin-left: 5px'/>
-          </el-tooltip>
-        </span>
-      )
-    },
-    getCascaderDataList() {
-      // 级联查询逻辑
-      this.settings.listLoading = true
-      getCascaderListApi().then(response => {
-        this.dataJson.cascader.data = response.data
-      }).finally(() => {
-        this.settings.listLoading = false
-      })
-    },
-    // --------------弹出查询框：--------------
-
-    // --------------弹出查询框：模块页面--------------
-    // 选择or重置按钮的初始化
-    initModuleSelectButton() {
-      this.$nextTick(() => {
-        this.$refs.selectOne.$el.parentElement.className = 'el-input-group__append el-input-group__append_select'
-        this.$refs.selectTwo.$el.parentElement.className = 'el-input-group__append el-input-group__append_select'
-      })
-    },
-    handleModuleDialogClick() {
-      // 选择按钮
-      this.popSettingsData.searchDialogDataTwo.dialogVisible = true
-    },
-    // 关闭对话框：确定
-    handleModuleCloseOk(val) {
-      this.popSettingsData.searchDialogDataTwo.selectedDataJson = val
-      this.popSettingsData.searchDialogDataTwo.dialogVisible = false
-    },
-    // 关闭对话框：取消
-    handleModuletCloseCancel() {
-      this.popSettingsData.searchDialogDataTwo.dialogVisible = false
     },
     // 复制新增逻辑
     doCopyInsert() {
@@ -1046,7 +489,7 @@ export default {
               duration: this.settings.duration
             })
             this.getDataList()
-            this.popSettingsData.dialogFormVisible = false
+            this.popSettings.one.visible = false
           }, (_error) => {
             this.$notify({
               title: '复制新增处理失败',
@@ -1054,17 +497,11 @@ export default {
               type: 'error',
               duration: this.settings.duration
             })
-            // this.popSettingsData.dialogFormVisible = false
           }).finally(() => {
             this.settings.listLoading = false
           })
         }
       })
-    },
-    // 级联事件
-    handleCascaderChange(val) {
-      // 数组中最后一个才是parent_id
-      this.dataJson.tempJson.parent_id = val[val.length - 1]
     },
     // 删除按钮
     handleRealyDelete() {
@@ -1114,7 +551,68 @@ export default {
         })
         this.settings.listLoading = false
       })
+    },
+    // -----------------新增菜单组 start------------------
+    handleEditGroupDialogCloseMeOk(val) {
+      switch (this.popSettings.one.props.dialogStatus) {
+        case this.PARAMETERS.STATUS_INSERT:
+          this.doInsertEditGrouplCallBack(val)
+          break
+        case this.PARAMETERS.STATUS_UPDATE:
+          this.doUpdateEditGroupCallBack(val)
+          break
+      }
+    },
+    handleEditGroupDialogCloseMeCancel() {
+      this.popSettings.one.visible = false
+    },
+    // 处理插入回调
+    doInsertEditGrouplCallBack(val) {
+      if (val.return_flag) {
+        this.popSettings.one.visible = false
+
+        // 设置到table中绑定的json数据源
+        this.dataJson.listData.push(val.data.data)
+        this.$notify({
+          title: '新增处理成功',
+          message: val.data.message,
+          type: 'success',
+          duration: this.settings.duration
+        })
+      } else {
+        this.$notify({
+          title: '新增处理失败',
+          message: val.error.message,
+          type: 'error',
+          duration: this.settings.duration
+        })
+      }
+    },
+    // 处理更新回调
+    doUpdateEditGroupCallBack(val) {
+      if (val.return_flag) {
+        this.popSettings.one.visible = false
+
+        // 设置到table中绑定的json数据源
+        this.dataJson.listData.splice(this.dataJson.rowIndex, 1, val.data.data)
+        // 设置到currentjson中
+        this.dataJson.currentJson = Object.assign({}, val.data.data)
+        this.$notify({
+          title: '更新处理成功',
+          message: val.data.message,
+          type: 'success',
+          duration: this.settings.duration
+        })
+      } else {
+        this.$notify({
+          title: '更新处理失败',
+          message: val.error.message,
+          type: 'error',
+          duration: this.settings.duration
+        })
+      }
     }
+    // -----------------新增菜单组 end------------------
   }
 }
 </script>
