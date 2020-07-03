@@ -355,6 +355,12 @@ export default {
           this.popSettings.one.visible = true
           this.popSettings.one.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
           break
+          // 根节点编辑
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
+          this.popSettings.two.props.data = deepCopy(this.dataJson.currentJson)
+          this.popSettings.two.visible = true
+          this.popSettings.two.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
+          break
       }
     },
     // 点击按钮 添加子菜单-结点
@@ -558,11 +564,9 @@ export default {
     doUpdateEditSubNodeCallBack(val) {
       if (val.return_flag) {
         this.popSettings.two.visible = false
-
-        // 设置到table中绑定的json数据源
-        this.dataJson.listData.splice(this.dataJson.rowIndex, 1, val.data.data)
         // 设置到currentjson中
-        this.dataJson.currentJson = Object.assign({}, val.data.data)
+        this.dataJson.currentJson = deepCopy(val.data.data)
+        this.getDataList()
         this.$notify({
           title: '更新处理成功',
           message: val.data.message,
