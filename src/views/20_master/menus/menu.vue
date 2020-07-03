@@ -568,6 +568,7 @@ export default {
     },
     // 处理插入回调
     doInsertEditGrouplCallBack(val) {
+      debugger
       if (val.return_flag) {
         this.popSettings.one.visible = false
 

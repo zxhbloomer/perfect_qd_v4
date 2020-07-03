@@ -293,6 +293,7 @@ export default {
           const tempData = deepCopy(this.dataJson.tempJson)
           this.settings.loading = true
           addMenuGroupApi(tempData).then((_data) => {
+            debugger
             this.$emit('closeMeOk', { return_flag: true, data: _data })
           }, (_error) => {
             this.$emit('closeMeOk', { return_flag: false, error: _error })
