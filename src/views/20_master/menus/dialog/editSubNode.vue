@@ -38,6 +38,7 @@
               clearable
               :props="{ checkStrictly: true, expandTrigger: 'hover'}"
               style="width: 100%"
+              disabled
             />
           </el-form-item>
         </el-col>
@@ -51,16 +52,33 @@
 
       <el-row>
         <el-col :span="12">
-          <el-form-item label="菜单组编号：" prop="code">
-            <el-input ref="refFocusOne" v-model.trim="dataJson.tempJson.code" clearable show-word-limit />
+          <el-form-item label="结点名称：" prop="name">
+            <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="菜单组名称：" prop="name">
-            <el-input ref="refFocusTwo" v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
+          <el-form-item label="icon：" prop="meta_icon">
+            <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
           </el-form-item>
         </el-col>
       </el-row>
+
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="请求地址：" prop="path">
+            <el-input v-model.trim="dataJson.tempJson.path" clearable show-word-limit />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="菜单类型：" prop="type_name">
+            <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-form-item label="URL：" prop="">
+        <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
+      </el-form-item>
 
       <el-row v-show="settings.dialogStatus === 'update' || isViewModel">
         <el-col :span="12">
@@ -78,12 +96,11 @@
     <div slot="footer" class="dialog-footer">
       <el-divider />
       <div class="floatLeft">
-        <el-button type="danger" :disabled="settings.listLoading || settings.btnDisabledStatus.disabledReset" @click="doReset()">重置</el-button>
+        <el-button type="danger" :disabled="settings.loading || settings.btnDisabledStatus.disabledReset" @click="doReset()">重置</el-button>
       </div>
-      <el-button plain :disabled="settings.listLoading" @click="handleCancel()">取消</el-button>
-      <el-button v-show="settings.btnShowStatus.showInsert" plain type="primary" :disabled="settings.listLoading || settings.btnDisabledStatus.disabledInsert " @click="doInsert()">确定</el-button>
-      <el-button v-show="settings.btnShowStatus.showUpdate" plain type="primary" :disabled="settings.listLoading || settings.btnDisabledStatus.disabledUpdate " @click="doUpdate()">确定</el-button>
-      <el-button v-show="settings.btnShowStatus.showCopyInsert" plain type="primary" :disabled="settings.listLoading || settings.btnDisabledStatus.disabledCopyInsert " @click="doCopyInsert()">确定</el-button>
+      <el-button plain :disabled="settings.loading" @click="handleCancel()">取消</el-button>
+      <el-button v-show="settings.btnShowStatus.showInsert" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledInsert " @click="doInsert()">确定</el-button>
+      <el-button v-show="settings.btnShowStatus.showUpdate" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledUpdate " @click="doUpdate()">确定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -288,11 +305,11 @@ export default {
     },
     getCascaderDataList() {
       // 级联查询逻辑
-      this.settings.listLoading = true
+      this.settings.loading = true
       getCascaderListApi().then(response => {
         this.dataJson.cascader.data = response.data
       }).finally(() => {
-        this.settings.listLoading = false
+        this.settings.loading = false
       })
     },
     // 更新逻辑
