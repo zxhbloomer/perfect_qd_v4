@@ -49,6 +49,18 @@ export function addMenuGroupApi(data) {
 }
 
 /**
+ * 新增子节点
+ * @param {*} data
+ */
+export function addSubNodeApi(data) {
+  return request({
+    url: '/api/v1/menus/addsubnode',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 新增菜单组
  * @param {*} data
  */

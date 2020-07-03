@@ -22,7 +22,7 @@
     </el-form>
     <el-button-group v-show="!meDialogStatus.dialogStatus">
       <el-button type="primary" icon="el-icon-circle-plus-outline" :loading="settings.listLoading" @click="handleInsert">新增菜单组</el-button>
-      <el-button :disabled="!settings.btnShowStatus.showCopyInsert" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleCopyInsert">添加子菜单</el-button>
+      <el-button :disabled="!settings.btnShowStatus.showAddSubNode" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddSubNode">添加子菜单-结点</el-button>
       <el-button :disabled="!settings.btnShowStatus.showUpdate" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleUpdate">修改</el-button>
       <el-button :disabled="!settings.btnShowStatus.showExport" type="primary" icon="el-icon-circle-close" :loading="settings.listLoading" @click="handleRealyDelete">物理删除</el-button>
     </el-button-group>
@@ -73,6 +73,8 @@
         </el-table-column>
       </el-table-column>
     </el-table>
+
+    <!-- 新增菜单组 dialog -->
     <edit-group-dialog
       v-if="popSettings.one.visible"
       :visible="popSettings.one.visible"
@@ -81,6 +83,17 @@
       @closeMeOk="handleEditGroupDialogCloseMeOk"
       @closeMeCancel="handleEditGroupDialogCloseMeCancel"
     />
+
+    <!-- 添加子菜单-结点 dialog editSubNodeDialog-->
+    <edit-sub-node-dialog
+      v-if="popSettings.two.visible"
+      :visible="popSettings.two.visible"
+      :dialog-status="popSettings.two.props.dialogStatus"
+      :data="popSettings.two.props.data"
+      @closeMeOk="handleEditSubNodeDialogCloseMeOk"
+      @closeMeCancel="handleEditSubNodeDialogCloseMeCancel"
+    />
+
     <iframe id="refIframe" ref="refIframe" scrolling="no" frameborder="0" style="display:none" name="refIframe">x</iframe>
   </div>
 </template>
@@ -124,11 +137,12 @@ import resizeMixin from './menuResizeHandlerMixin'
 import elDragDialog from '@/directive/el-drag-dialog'
 import SelectDict from '@/components/00_dict/select/SelectDict'
 import editGroupDialog from '@/views/20_master/menus/dialog/editGroup'
+import editSubNodeDialog from '@/views/20_master/menus/dialog/editSubNode'
 import deepCopy from 'deep-copy'
 
 export default {
   name: constants_program.P_MENU, // 页面id，和router中的name需要一致，作为缓存
-  components: { SelectDict, editGroupDialog },
+  components: { SelectDict, editGroupDialog, editSubNodeDialog },
   directives: { elDragDialog },
   mixins: [resizeMixin],
   props: {
@@ -180,6 +194,8 @@ export default {
         // 按钮状态
         btnShowStatus: {
           showUpdate: false,
+          // 添加子菜单-结点：按钮
+          showAddSubNode: false,
           showCopyInsert: false,
           showExport: false
         },
@@ -201,7 +217,9 @@ export default {
         two: {
           visible: false,
           props: {
-            data: {}
+            id: undefined,
+            data: {},
+            dialogStatus: ''
           }
         }
       }
@@ -226,6 +244,7 @@ export default {
       handler(newVal, oldVal) {
         if (this.dataJson.currentJson.id !== undefined) {
           // this.settings.btnShowStatus.doInsert = true
+          this.settings.btnShowStatus.showAddSubNode = true
           this.settings.btnShowStatus.showUpdate = true
           this.settings.btnShowStatus.showCopyInsert = true
           this.settings.btnShowStatus.showExport = true
@@ -338,10 +357,11 @@ export default {
           break
       }
     },
-    // 点击按钮 复制新增
-    handleCopyInsert() {
-      // 修改
-      this.popSettings.one.visible = true
+    // 点击按钮 添加子菜单-结点
+    handleAddSubNode() {
+      this.popSettings.two.props.dialogStatus = this.PARAMETERS.STATUS_INSERT
+      this.popSettings.two.props.data = deepCopy(this.dataJson.currentJson)
+      this.popSettings.two.visible = true
     },
     handleCurrentChange(row) {
       this.dataJson.currentJson = Object.assign({}, row) // copy obj
@@ -498,8 +518,69 @@ export default {
           duration: this.settings.duration
         })
       }
-    }
+    },
     // -----------------新增菜单组 end------------------
+    // -----------------添加子菜单-结点 start------------------
+    handleEditSubNodeDialogCloseMeOk(val) {
+      switch (this.popSettings.two.props.dialogStatus) {
+        case this.PARAMETERS.STATUS_INSERT:
+          this.doInsertEditSubNodelCallBack(val)
+          break
+        case this.PARAMETERS.STATUS_UPDATE:
+          this.doUpdateEditSubNodeCallBack(val)
+          break
+      }
+    },
+    handleEditSubNodeDialogCloseMeCancel() {
+      this.popSettings.two.visible = false
+    },
+    // 处理插入回调
+    doInsertEditSubNodelCallBack(val) {
+      if (val.return_flag) {
+        this.popSettings.two.visible = false
+
+        // 设置到table中绑定的json数据源
+        this.dataJson.listData.push(val.data.data)
+        this.$notify({
+          title: '新增处理成功',
+          message: val.data.message,
+          type: 'success',
+          duration: this.settings.duration
+        })
+      } else {
+        this.$notify({
+          title: '新增处理失败',
+          message: val.error.message,
+          type: 'error',
+          duration: this.settings.duration
+        })
+      }
+    },
+    // 处理更新回调
+    doUpdateEditSubNodeCallBack(val) {
+      if (val.return_flag) {
+        this.popSettings.two.visible = false
+
+        // 设置到table中绑定的json数据源
+        this.dataJson.listData.splice(this.dataJson.rowIndex, 1, val.data.data)
+        // 设置到currentjson中
+        this.dataJson.currentJson = Object.assign({}, val.data.data)
+        this.$notify({
+          title: '更新处理成功',
+          message: val.data.message,
+          type: 'success',
+          duration: this.settings.duration
+        })
+      } else {
+        this.$notify({
+          title: '更新处理失败',
+          message: val.error.message,
+          type: 'error',
+          duration: this.settings.duration
+        })
+      }
+    }
+    // -----------------添加子菜单-结点 end------------------
   }
 }
 </script>
