@@ -42,7 +42,6 @@
       default-expand-all
       row-key="id"
       @row-click="handleRowClick"
-      @row-dblclick="handleRowDbClick"
       @current-change="handleCurrentChange"
       @selection-change="handleSelectionChange"
     >
@@ -78,6 +77,7 @@
       v-if="popSettings.one.visible"
       :visible="popSettings.one.visible"
       :dialog-status="popSettings.one.props.dialogStatus"
+      :data="popSettings.one.props.data"
       @closeMeOk="handleEditGroupDialogCloseMeOk"
       @closeMeCancel="handleEditGroupDialogCloseMeCancel"
     />
@@ -119,7 +119,7 @@
 
 <script>
 import constants_program from '@/common/constants/constants_program'
-import { getListApi, updateApi, addSubMenuApi, deleteApi, realDeleteSelectionApi } from '@/api/20_master/menus/menu'
+import { getListApi, deleteApi, realDeleteSelectionApi } from '@/api/20_master/menus/menu'
 import resizeMixin from './menuResizeHandlerMixin'
 import elDragDialog from '@/directive/el-drag-dialog'
 import SelectDict from '@/components/00_dict/select/SelectDict'
@@ -166,25 +166,8 @@ export default {
         listData: null,
         // 按钮json
         menu_buttons: null,
-        // 单条数据 json的，初始化原始数据
-        tempJsonOriginal: {
-          id: undefined,
-          name: '',
-          code: '',
-          descr: '',
-          dbversion: 0
-        },
         // 单条数据 json
         currentJson: null,
-        tempJson: null,
-        inputSettings: {
-          maxLength: {
-            name: 20,
-            code: 20,
-            descr: 200,
-            simple_name: 20
-          }
-        },
         // 当前表格中的索引，第几条
         rowIndex: 0,
         // 当前选中的行（checkbox）
@@ -266,8 +249,6 @@ export default {
     initShow() {
       // 初始化查询
       this.getDataList()
-      // 数据初始化
-      this.dataJson.tempJson = Object.assign({}, this.dataJson.tempJsonOriginal)
     },
     // 下拉选项控件事件
     handleSelectChange(val) {
@@ -279,16 +260,7 @@ export default {
     },
     // 行点击
     handleRowClick(row) {
-      this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = this.getRowIndex(row)
-    },
-    // 行双点击，仅在dialog中有效
-    handleRowDbClick(row) {
-      this.dataJson.tempJson = Object.assign({}, row) // copy obj
-      this.dataJson.rowIndex = this.getRowIndex(row)
-      if (this.meDialogStatus.dialogStatus) {
-        this.$emit('rowDbClick', this.dataJson.tempJson)
-      }
     },
     handleSearch() {
       // 查询
@@ -301,8 +273,6 @@ export default {
       // this.dataJson.currentJson.id = undefined
     },
     handleRowUpdate(row, _rowIndex) {
-      // 修改
-      this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = _rowIndex
     },
     // 删除操作
@@ -354,50 +324,28 @@ export default {
     },
     // 点击按钮 更新
     handleUpdate() {
-      // 初始化级联数据
-      this.getCascaderDataList()
-
-      this.dataJson.tempJson = Object.assign({}, this.dataJson.currentJson)
-      if (this.dataJson.tempJson.id === undefined) {
+      // 没有选择任何数据的情况
+      if (this.dataJson.currentJson.id === undefined) {
         this.showErrorMsg('请选择一条数据')
         return
       }
-      // 修改
-      this.popSettings.one.visible = true
-      this.$nextTick(() => {
-        this.$refs['dataSubmitForm'].clearValidate()
-      })
+      switch (this.dataJson.currentJson.type) {
+        // 根节点编辑
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
+          this.popSettings.one.props.data = deepCopy(this.dataJson.currentJson)
+          this.popSettings.one.visible = true
+          this.popSettings.one.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
+          break
+      }
     },
     // 点击按钮 复制新增
     handleCopyInsert() {
-      // 初始化级联数据
-      this.getCascaderDataList()
-
-      this.dataJson.tempJson = Object.assign({}, this.dataJson.currentJson)
-      this.dataJson.tempJson.parent_id = this.dataJson.tempJson.id
-      this.dataJson.tempJson.id = undefined
-      this.dataJson.tempJson.template_id = undefined
-      this.dataJson.tempJson.u_id = ''
-      this.dataJson.tempJson.u_time = ''
-      this.dataJson.tempJson.code = ''
-      this.dataJson.tempJson.son_count = this.dataJson.tempJson.son_count + 1
-      this.dataJson.tempJson.path = ''
-      this.dataJson.tempJson.type = ''
-      this.dataJson.tempJson.meta_title = ''
-      this.dataJson.tempJson.meta_icon = ''
-      this.dataJson.tempJson.route_name = ''
-      this.dataJson.tempJson.component = ''
-
-      // 儿子个数增加
-      this.dataJson.tempJson.name = ''
-
       // 修改
       this.popSettings.one.visible = true
     },
     handleCurrentChange(row) {
       this.dataJson.currentJson = Object.assign({}, row) // copy obj
       this.dataJson.currentJson.index = this.getRowIndex(row)
-      this.dataJson.tempJsonOriginal = Object.assign({}, row) // copy obj
 
       // 设置dialog的返回
       this.$store.dispatch('popUpSearchDialog/selectedDataJson', Object.assign({}, row))
@@ -427,39 +375,6 @@ export default {
         this.settings.listLoading = false
       })
     },
-    // 更新逻辑
-    doUpdate() {
-      this.$refs['dataSubmitForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.dataJson.tempJson)
-          this.settings.listLoading = true
-          updateApi(tempData).then((_data) => {
-            this.dataJson.tempJson.dbversion = _data.data.dbversion
-            // 设置到table中绑定的json数据源
-            // this.dataJson.listData.splice(this.dataJson.rowIndex, 1, this.dataJson.tempJson)
-            // 设置到currentjson中
-            this.dataJson.currentJson = Object.assign({}, this.dataJson.tempJson)
-            this.$notify({
-              title: '更新处理成功',
-              message: _data.message,
-              type: 'success',
-              duration: this.settings.duration
-            })
-            this.getDataList()
-            this.popSettings.one.visible = false
-          }, (_error) => {
-            this.$notify({
-              title: '更新处理失败',
-              message: _error.message,
-              type: 'error',
-              duration: this.settings.duration
-            })
-          }).finally(() => {
-            this.settings.listLoading = false
-          })
-        }
-      })
-    },
     // 重置查询区域
     doResetSearch() {
       this.dataJson.searchForm = this.$options.data.call(this).dataJson.searchForm
@@ -474,34 +389,6 @@ export default {
         console.log(val, index, arr)
       })
       this.dataJson.multipleSelection = arr
-    },
-    // 复制新增逻辑
-    doCopyInsert() {
-      this.$refs['dataSubmitForm'].validate((valid) => {
-        if (valid) {
-          const tempData = Object.assign({}, this.dataJson.tempJson)
-          this.settings.listLoading = true
-          addSubMenuApi(tempData).then((_data) => {
-            this.$notify({
-              title: '复制新增处理成功',
-              message: _data.message,
-              type: 'success',
-              duration: this.settings.duration
-            })
-            this.getDataList()
-            this.popSettings.one.visible = false
-          }, (_error) => {
-            this.$notify({
-              title: '复制新增处理失败',
-              message: _error.message,
-              type: 'error',
-              duration: this.settings.duration
-            })
-          }).finally(() => {
-            this.settings.listLoading = false
-          })
-        }
-      })
     },
     // 删除按钮
     handleRealyDelete() {
@@ -568,7 +455,6 @@ export default {
     },
     // 处理插入回调
     doInsertEditGrouplCallBack(val) {
-      debugger
       if (val.return_flag) {
         this.popSettings.one.visible = false
 

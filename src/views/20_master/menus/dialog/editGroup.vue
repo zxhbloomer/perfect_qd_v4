@@ -32,7 +32,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item label="菜单组名称：" prop="name">
-            <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
+            <el-input ref="refFocusTwo" v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
           </el-form-item>
         </el-col>
       </el-row>
@@ -40,7 +40,7 @@
       <el-row v-show="settings.dialogStatus === 'update' || isViewModel">
         <el-col :span="12">
           <el-form-item label="更新人：" prop="u_name">
-            <el-input v-model.trim="dataJson.tempJson.u_id" disabled />
+            <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -79,7 +79,7 @@
 import constants_para from '@/common/constants/constants_para'
 import deepCopy from 'deep-copy'
 import elDragDialog from '@/directive/el-drag-dialog'
-import { addMenuGroupApi } from '@/api/20_master/menus/menu'
+import { addMenuGroupApi, updateApi } from '@/api/20_master/menus/menu'
 
 export default {
   components: { },
@@ -223,9 +223,40 @@ export default {
         this.$refs['refFocusOne'].focus()
       })
     },
+    // 修改时的初始化
+    initUpdateModel() {
+      // 数据初始化
+      this.dataJson.tempJson = deepCopy(this.data)
+      this.dataJson.tempJsonOriginal = deepCopy(this.data)
+      // 设置按钮
+      this.settings.btnShowStatus.showUpdate = true
+      // 控件focus
+      this.$nextTick(() => {
+        this.$refs['refFocusTwo'].focus()
+      })
+    },
     // 取消按钮
     handleCancel() {
       this.$emit('closeMeCancel')
+    },
+    // 更新逻辑
+    doUpdate() {
+      this.$refs['dataSubmitForm'].validate((valid) => {
+        if (valid) {
+          // const tempData = Object.assign({}, this.dataJson.tempJson)
+          const tempData = deepCopy(this.dataJson.tempJson)
+          this.settings.loading = true
+          updateApi(tempData).then((_data) => {
+            // this.dataJson.tempJson = Object.assign({}, _data.data)
+            this.dataJson.tempJson = deepCopy(_data.data)
+            this.$emit('closeMeOk', { return_flag: true, data: _data })
+          }, (_error) => {
+            this.$emit('closeMeOk', { return_flag: false, error: _error })
+          }).finally(() => {
+            this.settings.loading = false
+          })
+        }
+      })
     },
     // 重置按钮
     doReset() {
@@ -293,7 +324,6 @@ export default {
           const tempData = deepCopy(this.dataJson.tempJson)
           this.settings.loading = true
           addMenuGroupApi(tempData).then((_data) => {
-            debugger
             this.$emit('closeMeOk', { return_flag: true, data: _data })
           }, (_error) => {
             this.$emit('closeMeOk', { return_flag: false, error: _error })
