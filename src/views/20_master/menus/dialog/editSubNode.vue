@@ -176,8 +176,8 @@ export default {
         loading: true,
         dialogStatus: this.dialogStatus,
         textMap: {
-          insert: '新增菜单组',
-          update: '修改菜单组'
+          insert: '添加子菜单-结点',
+          update: '修改子菜单-结点'
         },
         // 按钮是否显示，默认不显示，false：不显示，true：显示
         btnShowStatus: {
