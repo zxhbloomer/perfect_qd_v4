@@ -481,14 +481,14 @@ export default {
         // 设置到table中绑定的json数据源
         this.dataJson.listData.push(val.data.data)
         this.$notify({
-          title: '新增处理成功',
+          title: '新增菜单组处理成功',
           message: val.data.message,
           type: 'success',
           duration: this.settings.duration
         })
       } else {
         this.$notify({
-          title: '新增处理失败',
+          title: '新增菜单组处理失败',
           message: val.error.message,
           type: 'error',
           duration: this.settings.duration
@@ -538,18 +538,16 @@ export default {
     doInsertEditSubNodelCallBack(val) {
       if (val.return_flag) {
         this.popSettings.two.visible = false
-
-        // 设置到table中绑定的json数据源
-        this.dataJson.listData.push(val.data.data)
+        this.getDataList()
         this.$notify({
-          title: '新增处理成功',
+          title: '添加子菜单-结点处理成功',
           message: val.data.message,
           type: 'success',
           duration: this.settings.duration
         })
       } else {
         this.$notify({
-          title: '新增处理失败',
+          title: '添加子菜单-结点处理失败',
           message: val.error.message,
           type: 'error',
           duration: this.settings.duration
