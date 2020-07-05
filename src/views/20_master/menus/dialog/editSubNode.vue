@@ -30,7 +30,6 @@
         <el-col :span="12">
           <el-form-item label="上级菜单：" prop="parent_id">
             <el-cascader
-              ref="refInsertFocus"
               v-model="dataJson.tempJson.depth_id_array"
               placeholder="请选择"
               :options="dataJson.cascader.data"
@@ -53,7 +52,7 @@
       <el-row>
         <el-col :span="12">
           <el-form-item label="结点名称：" prop="name">
-            <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
+            <el-input ref="refFocus" v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -284,7 +283,7 @@ export default {
       this.settings.btnShowStatus.showInsert = true
       // 控件focus
       this.$nextTick(() => {
-        this.$refs['refFocusOne'].focus()
+        this.$refs['refFocus'].focus()
       })
     },
     // 修改时的初始化
@@ -296,7 +295,7 @@ export default {
       this.settings.btnShowStatus.showUpdate = true
       // 控件focus
       this.$nextTick(() => {
-        this.$refs['refFocusTwo'].focus()
+        this.$refs['refFocus'].focus()
       })
     },
     // 取消按钮
@@ -339,7 +338,7 @@ export default {
           this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
           // 设置控件焦点focus
           this.$nextTick(() => {
-            this.$refs['refFocusOne'].focus()
+            this.$refs['refFocus'].focus()
           })
           break
         case this.PARAMETERS.STATUS_COPY_INSERT:
@@ -348,7 +347,7 @@ export default {
           this.dataJson.tempJson.code = ''
           // 设置控件焦点focus
           this.$nextTick(() => {
-            this.$refs['refFocusTwo'].focus()
+            this.$refs['refFocus'].focus()
           })
           break
         default:
@@ -356,7 +355,7 @@ export default {
           this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
           // 设置控件焦点focus
           this.$nextTick(() => {
-            this.$refs['refFocusOne'].focus()
+            this.$refs['refFocus'].focus()
           })
           break
       }
