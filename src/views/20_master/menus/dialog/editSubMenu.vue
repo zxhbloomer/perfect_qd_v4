@@ -52,6 +52,14 @@
 
       <el-row>
         <el-col :span="12">
+          <el-form-item label="页面选择：" prop="page_code">
+            <input-search v-model.trim="dataJson.tempJson.page_code" :disabled="isUpdateModel && isViewModel" @onInputSearch="handlePageOpen" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+
+      <el-row>
+        <el-col :span="12">
           <el-form-item label="结点名称：" prop="name">
             <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
           </el-form-item>
@@ -122,9 +130,10 @@ import constants_para from '@/common/constants/constants_para'
 import deepCopy from 'deep-copy'
 import elDragDialog from '@/directive/el-drag-dialog'
 import { addSubNodeApi, updateApi, getCascaderListApi } from '@/api/20_master/menus/menu'
+import InputSearch from '@/components/40_input/inputSearch'
 
 export default {
-  components: { },
+  components: { InputSearch },
   directives: { elDragDialog },
   mixins: [],
   props: {
