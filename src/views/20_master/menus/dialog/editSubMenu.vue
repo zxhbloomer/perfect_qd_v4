@@ -1,116 +1,150 @@
 <template>
-  <!-- pop窗口 数据编辑:新增、修改、步骤窗体-->
-  <el-dialog
-    v-if="listenVisible"
-    v-el-drag-dialog
-    v-loading="settings.loading"
-    element-loading-text="拼命加载中，请稍后..."
-    element-loading-background="rgba(255, 255, 255, 0.7)"
-    :title="settings.textMap[settings.dialogStatus]"
-    :visible="visible"
-    :close-on-click-modal="PARAMETERS.DIALOG_CLOSE_BY_CLICK"
-    :close-on-press-escape="PARAMETERS.DIALOG_CLOSE_BY_ESC"
-    :show-close="PARAMETERS.DIALOG_SHOW_CLOSE"
-    :append-to-body="true"
-    :modal-append-to-body="true"
-    width="900px"
-    destroy-on-close
-  >
-    <el-form
-      ref="dataSubmitForm"
-      :rules="settings.rules"
-      :model="dataJson.tempJson"
-      label-position="rigth"
-      label-width="120px"
-      status-icon
+  <div>
+    <!-- pop窗口 数据编辑:新增、修改、步骤窗体-->
+    <el-dialog
+      v-if="listenVisible"
+      v-el-drag-dialog
+      v-loading="settings.loading"
+      element-loading-text="拼命加载中，请稍后..."
+      element-loading-background="rgba(255, 255, 255, 0.7)"
+      :title="settings.textMap[settings.dialogStatus]"
+      :visible="visible"
+      :close-on-click-modal="PARAMETERS.DIALOG_CLOSE_BY_CLICK"
+      :close-on-press-escape="PARAMETERS.DIALOG_CLOSE_BY_ESC"
+      :show-close="PARAMETERS.DIALOG_SHOW_CLOSE"
+      :append-to-body="true"
+      :modal-append-to-body="true"
+      width="900px"
+      destroy-on-close
     >
-      <el-alert title="上级菜单信息" type="info" :closable="false" />
-      <br>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="上级菜单：" prop="parent_id">
-            <el-cascader
-              ref="refInsertFocus"
-              v-model="dataJson.tempJson.depth_id_array"
-              placeholder="请选择"
-              :options="dataJson.cascader.data"
-              filterable
-              clearable
-              :props="{ checkStrictly: true, expandTrigger: 'hover'}"
-              style="width: 100%"
-              disabled
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="请求地址：" prop="" />
-        </el-col>
-      </el-row>
+      <el-form
+        ref="dataSubmitForm"
+        :rules="settings.rules"
+        :model="dataJson.tempJson"
+        label-position="rigth"
+        label-width="120px"
+        status-icon
+      >
+        <el-alert title="上级菜单信息" type="info" :closable="false" />
+        <br>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="上级菜单：" prop="parent_id">
+              <el-cascader
+                ref="refInsertFocus"
+                v-model="dataJson.tempJson.depth_id_array"
+                placeholder="请选择"
+                :options="dataJson.cascader.data"
+                filterable
+                clearable
+                :props="{ checkStrictly: true, expandTrigger: 'hover'}"
+                style="width: 100%"
+                disabled
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="请求地址：" prop="" />
+          </el-col>
+        </el-row>
 
-      <el-alert title="添加子菜单-页面信息" type="info" :closable="false" />
-      <br>
+        <el-alert title="添加子菜单-页面信息" type="info" :closable="false" />
+        <br>
 
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="页面选择：" prop="page_code">
-            <input-search v-model.trim="dataJson.tempJson.page_code" :disabled="isUpdateModel && isViewModel" @onInputSearch="handlePageOpen" />
-          </el-form-item>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="页面选择：" prop="page_code">
+              <input-search v-model.trim="dataJson.tempJson.page_info" :disabled="isUpdateModel && isViewModel" @onInputSearch="handlePageOpen" />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="结点名称：" prop="name">
-            <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="icon：" prop="meta_icon">
-            <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="路由编号：" prop="route_name">
+              <el-input v-model.trim="dataJson.tempJson.route_name" clearable show-word-limit :disabled="!isSelectedPage" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="icon：" prop="meta_icon">
+              <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit :disabled="!isSelectedPage" />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜单名称：" prop="name">
+              <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit :disabled="!isSelectedPage" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="菜单类型：" prop="type_name">
+              <el-input v-model.trim="dataJson.tempJson.type_name" disabled clearable show-word-limit />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="请求地址：" prop="path">
+              <el-input v-model.trim="dataJson.tempJson.path" clearable show-word-limit :disabled="!isSelectedPage" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="页面文件路径：" prop="component">
+              <el-input v-model.trim="dataJson.tempJson.component" clearable show-word-limit disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="请求地址：" prop="path">
-            <el-input v-model.trim="dataJson.tempJson.path" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="菜单类型：" prop="type_name">
-            <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="菜单不可关闭：" prop="affix">
+              <el-switch
+                v-model="dataJson.tempJson.affix"
+                active-text="开启"
+                inactive-text="关闭"
+                :disabled="!isSelectedPage"
+              />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-form-item label="URL：" prop="">
-        <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
-      </el-form-item>
+        <el-form-item label="URL：" prop="">
+          <el-input v-model.trim="dataJson.tempJson.path" disabled clearable show-word-limit />
+        </el-form-item>
 
-      <el-row v-show="settings.dialogStatus === 'update' || isViewModel">
-        <el-col :span="12">
-          <el-form-item label="更新人：" prop="u_name">
-            <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="更新时间：" prop="u_time">
-            <el-input v-model.trim="dataJson.tempJson.u_time" disabled />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-divider />
-      <div class="floatLeft">
-        <el-button type="danger" :disabled="settings.loading || settings.btnDisabledStatus.disabledReset" @click="doReset()">重置</el-button>
+        <el-row v-show="settings.dialogStatus === 'update' || isViewModel">
+          <el-col :span="12">
+            <el-form-item label="更新人：" prop="u_name">
+              <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="更新时间：" prop="u_time">
+              <el-input v-model.trim="dataJson.tempJson.u_time" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-divider />
+        <div class="floatLeft">
+          <el-button type="danger" :disabled="settings.loading || settings.btnDisabledStatus.disabledReset" @click="doReset()">重置</el-button>
+        </div>
+        <el-button plain :disabled="settings.loading" @click="handleCancel()">取消</el-button>
+        <el-button v-show="settings.btnShowStatus.showInsert" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledInsert " @click="doInsert()">确定</el-button>
+        <el-button v-show="settings.btnShowStatus.showUpdate" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledUpdate " @click="doUpdate()">确定</el-button>
       </div>
-      <el-button plain :disabled="settings.loading" @click="handleCancel()">取消</el-button>
-      <el-button v-show="settings.btnShowStatus.showInsert" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledInsert " @click="doInsert()">确定</el-button>
-      <el-button v-show="settings.btnShowStatus.showUpdate" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledUpdate " @click="doUpdate()">确定</el-button>
-    </div>
-  </el-dialog>
+    </el-dialog>
+
+    <page-dialog
+      v-if="popSettings.one.visible"
+      :visible="popSettings.one.visible"
+      @closeMeOk="handlePageCloseOk"
+      @closeMeCancel="handlePageCloseCancel"
+    />
+
+  </div>
 </template>
 
 <style scoped>
@@ -131,9 +165,11 @@ import deepCopy from 'deep-copy'
 import elDragDialog from '@/directive/el-drag-dialog'
 import { addSubNodeApi, updateApi, getCascaderListApi } from '@/api/20_master/menus/menu'
 import InputSearch from '@/components/40_input/inputSearch'
+import pageDialog from '@/views/10_system/pages/page/dialog/dialog'
+import { isNotEmpty } from '@/utils/index.js'
 
 export default {
-  components: { InputSearch },
+  components: { InputSearch, pageDialog },
   directives: { elDragDialog },
   mixins: [],
   props: {
@@ -202,13 +238,34 @@ export default {
           disabledCopyInsert: true
         },
         rules: {
+          route_name: [{ required: true, message: '请输入路由编号', trigger: 'change' }],
           code: [{ required: true, message: '请输入菜单组编号', trigger: 'change' }],
-          name: [{ required: true, message: '请输入菜单组名称', trigger: 'change' }]
+          name: [{ required: true, message: '请输入菜单组名称', trigger: 'change' }],
+          path: [{ required: true, message: '请输入请求地址', trigger: 'change' }]
+        }
+      },
+      popSettings: {
+        // 弹出编辑页面
+        one: {
+          visible: false,
+          props: {
+            id: undefined,
+            data: {},
+            dialogStatus: ''
+          }
         }
       }
     }
   },
   computed: {
+    // 判断是否选择了页面
+    isSelectedPage() {
+      if (isNotEmpty(this.dataJson.tempJson.page_info)) {
+        return true
+      } else {
+        return false
+      }
+    },
     // 是否为更新模式
     isUpdateModel() {
       if (this.settings.dialogStatus === this.PARAMETERS.STATUS_INSERT || this.settings.dialogStatus === this.PARAMETERS.STATUS_COPY_INSERT) {
@@ -255,6 +312,8 @@ export default {
       }
       // 初始化watch
       this.setWatch()
+      this.dataJson.tempJson.type = this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE
+      this.dataJson.tempJson.type_name = '页面'
       this.settings.loading = false
     },
     initTempJsonOriginal() {
@@ -293,7 +352,6 @@ export default {
       this.settings.btnShowStatus.showInsert = true
       // 控件focus
       this.$nextTick(() => {
-        this.$refs['refFocusOne'].focus()
       })
     },
     // 修改时的初始化
@@ -305,7 +363,6 @@ export default {
       this.settings.btnShowStatus.showUpdate = true
       // 控件focus
       this.$nextTick(() => {
-        this.$refs['refFocusTwo'].focus()
       })
     },
     // 取消按钮
@@ -348,7 +405,6 @@ export default {
           this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
           // 设置控件焦点focus
           this.$nextTick(() => {
-            this.$refs['refFocusOne'].focus()
           })
           break
         case this.PARAMETERS.STATUS_COPY_INSERT:
@@ -357,7 +413,6 @@ export default {
           this.dataJson.tempJson.code = ''
           // 设置控件焦点focus
           this.$nextTick(() => {
-            this.$refs['refFocusTwo'].focus()
           })
           break
         default:
@@ -365,7 +420,6 @@ export default {
           this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
           // 设置控件焦点focus
           this.$nextTick(() => {
-            this.$refs['refFocusOne'].focus()
           })
           break
       }
@@ -419,7 +473,32 @@ export default {
     handleCascaderChange(val) {
       // 数组中最后一个才是parent_id
       this.dataJson.tempJson.parent_id = val[val.length - 1]
+    },
+    // ------------------input search start--------------------
+    handlePageOpen() {
+      this.popSettings.one.visible = true
+    },
+    handlePageCloseOk(val) {
+      this.popSettings.one.selectedDataJson = val
+      this.dataJson.tempJson.id = val.id
+      this.dataJson.tempJson.name = val.name
+      this.dataJson.tempJson.code = val.code
+      this.dataJson.tempJson.path = val.path
+      this.dataJson.tempJson.route_name = val.code
+      this.dataJson.tempJson.meta_title = val.meta_title
+      this.dataJson.tempJson.meta_icon = val.meta_icon
+      this.dataJson.tempJson.component = val.component
+      this.dataJson.tempJson.affix = false
+
+      this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.code + ')'
+      this.dataJson.tempJson.type = this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE
+      this.dataJson.tempJson.type_name = '页面'
+      this.popSettings.one.visible = false
+    },
+    handlePageCloseCancel() {
+      this.popSettings.one.visible = false
     }
+    // ------------------input search end--------------------
   }
 }
 </script>

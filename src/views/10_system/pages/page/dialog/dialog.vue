@@ -101,7 +101,7 @@ export default {
   },
   methods: {
     handleRowDbClick(val) {
-      this.$emit('closeMeOk', this.$store.getters.selectedDataJson)
+      this.$emit('closeMeOk', val)
     },
     // 确定
     handleDoOk() {
