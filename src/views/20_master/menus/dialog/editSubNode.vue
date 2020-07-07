@@ -42,7 +42,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="请求地址：" prop="" />
+          <el-form-item label="请求地址：" prop="parent_path">
+            {{ dataJson.tempJson.parent_path }}
+          </el-form-item>
         </el-col>
       </el-row>
 
@@ -75,8 +77,13 @@
         </el-col>
       </el-row>
 
-      <el-form-item label="URL：" prop="">
-        <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
+      <el-form-item label="URL：" prop="full_path">
+        <div v-if="dataJson.tempJson.parent_path !== '/'">
+          {{ dataJson.tempJson.parent_path + '/' + dataJson.tempJson.path }}
+        </div>
+        <div v-else>
+          {{ dataJson.tempJson.parent_path + dataJson.tempJson.path }}
+        </div>
       </el-form-item>
 
       <el-row v-show="settings.dialogStatus === 'update' || isViewModel">
@@ -193,7 +200,8 @@ export default {
         },
         rules: {
           code: [{ required: true, message: '请输入菜单组编号', trigger: 'change' }],
-          name: [{ required: true, message: '请输入菜单组名称', trigger: 'change' }]
+          name: [{ required: true, message: '请输入菜单组名称', trigger: 'change' }],
+          path: [{ required: true, message: '请输入请求地址', trigger: 'change' }]
         }
       }
     }
@@ -264,6 +272,7 @@ export default {
       // 数据初始化
       this.initTempJsonOriginal()
       this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
+      this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.full_path
       this.dataJson.tempJson.parent_id = this.dataJson.tempJson.id
       this.dataJson.tempJson.id = undefined
       this.dataJson.tempJson.template_id = undefined
@@ -291,6 +300,7 @@ export default {
       // 数据初始化
       this.dataJson.tempJson = deepCopy(this.data)
       this.dataJson.tempJsonOriginal = deepCopy(this.data)
+      this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.full_path
       // 设置按钮
       this.settings.btnShowStatus.showUpdate = true
       // 控件focus
@@ -317,6 +327,11 @@ export default {
         if (valid) {
           // const tempData = Object.assign({}, this.dataJson.tempJson)
           const tempData = deepCopy(this.dataJson.tempJson)
+          if (tempData.parent_path !== '/') {
+            tempData.full_path = tempData.parent_path + '/' + tempData.path
+          } else {
+            tempData.full_path = tempData.parent_path + tempData.path
+          }
           this.settings.loading = true
           updateApi(tempData).then((_data) => {
             // this.dataJson.tempJson = Object.assign({}, _data.data)
@@ -394,6 +409,11 @@ export default {
         if (valid) {
           // const tempData = Object.assign({}, this.dataJson.tempJson)
           const tempData = deepCopy(this.dataJson.tempJson)
+          if (tempData.parent_path !== '/') {
+            tempData.full_path = tempData.parent_path + '/' + tempData.path
+          } else {
+            tempData.full_path = tempData.parent_path + tempData.path
+          }
           this.settings.loading = true
           addSubNodeApi(tempData).then((_data) => {
             this.$emit('closeMeOk', { return_flag: true, data: _data })

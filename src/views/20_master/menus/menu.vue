@@ -48,6 +48,7 @@
     >
       <el-table-column header-align="center" type="index" width="45" />
       <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="name" label="菜单名称" />
+      <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="full_path" label="请求地址" />
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="code" label="菜单编号" /> -->
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="80" prop="type_name" label="菜单类型" /> -->
       <el-table-column header-align="center" label="按钮">
