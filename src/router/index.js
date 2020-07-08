@@ -225,11 +225,6 @@ export const asyncRoutes = [
           }
         ]
       },
-      { path: 'sysmenu',
-        component: () => import('@/views/10_system/sysmenu/sysmenu'),
-        name: 'P00000120',
-        meta: { title: '系统菜单设置', icon: '菜单' }
-      },
       {
         path: 'org',
         // component: subMenu,

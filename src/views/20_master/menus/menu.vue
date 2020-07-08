@@ -254,11 +254,30 @@ export default {
     'dataJson.currentJson': {
       handler(newVal, oldVal) {
         if (this.dataJson.currentJson !== undefined && this.dataJson.currentJson.id !== undefined) {
-          // this.settings.btnShowStatus.doInsert = true
-          this.settings.btnShowStatus.showAddSubNode = true
-          this.settings.btnShowStatus.showAddSubMenu = true
-          this.settings.btnShowStatus.showUpdate = true
-          this.settings.btnShowStatus.showRealyDelete = true
+          // 根据菜单类型，设置按钮是否可用
+          switch (this.dataJson.currentJson.type) {
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
+              // 根节点
+              this.settings.btnShowStatus.showAddSubNode = true
+              this.settings.btnShowStatus.showAddSubMenu = true
+              this.settings.btnShowStatus.showUpdate = true
+              this.settings.btnShowStatus.showRealyDelete = true
+              break
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
+              // 节点
+              this.settings.btnShowStatus.showAddSubNode = true
+              this.settings.btnShowStatus.showAddSubMenu = true
+              this.settings.btnShowStatus.showUpdate = true
+              this.settings.btnShowStatus.showRealyDelete = true
+              break
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
+              // 页面
+              this.settings.btnShowStatus.showAddSubNode = true
+              this.settings.btnShowStatus.showAddSubMenu = false
+              this.settings.btnShowStatus.showUpdate = true
+              this.settings.btnShowStatus.showRealyDelete = true
+              break
+          }
         } else {
           // this.settings.btnShowStatus.doInsert = false
           this.settings.btnShowStatus.showAddSubNode = false
@@ -396,7 +415,6 @@ export default {
     handleCurrentChange(row) {
       this.dataJson.currentJson = Object.assign({}, row) // copy obj
       this.dataJson.currentJson.index = this.getRowIndex(row)
-
       // 设置dialog的返回
       this.$store.dispatch('popUpSearchDialog/selectedDataJson', Object.assign({}, row))
     },

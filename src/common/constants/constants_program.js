@@ -23,8 +23,6 @@ const D_COMPANY_DIALOG = 'D00000110'
 /** 集团信息 */
 const P_GROUP = 'P00000100'
 const D_GROUP_DIALOG = 'D00000100'
-/** 菜单管理 */
-const P_MENU = 'P00000120'
 /** 租户管理 */
 const P_TENANT = 'P00000080'
 /** 系统参数 */
@@ -82,8 +80,6 @@ export default {
   /** 集团信息 */
   P_GROUP,
   D_GROUP_DIALOG,
-  /** 菜单管理 */
-  P_MENU,
   /** 租户管理 */
   P_TENANT,
   /** 系统参数 */

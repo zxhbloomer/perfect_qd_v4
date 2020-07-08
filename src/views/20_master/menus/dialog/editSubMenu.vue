@@ -414,18 +414,11 @@ export default {
       switch (this.settings.dialogStatus) {
         case this.PARAMETERS.STATUS_UPDATE:
           // 数据初始化
-          this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
-          // 设置控件焦点focus
-          this.$nextTick(() => {
-          })
+          this.initUpdateModel()
           break
         case this.PARAMETERS.STATUS_COPY_INSERT:
           // 数据初始化
-          this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
-          this.dataJson.tempJson.code = ''
-          // 设置控件焦点focus
-          this.$nextTick(() => {
-          })
+          this.initUpdateModel()
           break
         default:
           // 数据初始化
