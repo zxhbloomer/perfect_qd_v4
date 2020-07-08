@@ -55,7 +55,7 @@
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="页面选择：" prop="page_code">
+            <el-form-item label="页面选择：" prop="page_info">
               <input-search v-model.trim="dataJson.tempJson.page_info" :disabled="isUpdateModel && isViewModel" @onInputSearch="handlePageOpen" />
             </el-form-item>
           </el-col>
@@ -366,7 +366,7 @@ export default {
       this.dataJson.tempJson = deepCopy(this.data)
       this.dataJson.tempJsonOriginal = deepCopy(this.data)
       this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.full_path
-      this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.code + ')'
+      this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.page_code + ')'
       // 设置按钮
       this.settings.btnShowStatus.showUpdate = true
       // 控件focus
@@ -471,6 +471,7 @@ export default {
         if (valid) {
           // const tempData = Object.assign({}, this.dataJson.tempJson)
           const tempData = deepCopy(this.dataJson.tempJson)
+          debugger
           if (tempData.parent_path !== '/') {
             tempData.full_path = tempData.parent_path + '/' + tempData.path
           } else {
@@ -500,15 +501,17 @@ export default {
       this.popSettings.one.selectedDataJson = val
       this.dataJson.tempJson.id = val.id
       this.dataJson.tempJson.name = val.name
-      this.dataJson.tempJson.code = val.code
       this.dataJson.tempJson.path = ''
       // this.dataJson.tempJson.route_name = val.code
       this.dataJson.tempJson.meta_title = val.meta_title
       this.dataJson.tempJson.meta_icon = val.meta_icon
       this.dataJson.tempJson.component = val.component
       this.dataJson.tempJson.affix = false
+      debugger
+      this.dataJson.tempJson.page_id = val.id
+      this.dataJson.tempJson.page_code = val.code
 
-      this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.code + ')'
+      this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.page_code + ')'
       this.dataJson.tempJson.type = this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE
       this.dataJson.tempJson.type_name = '页面'
 

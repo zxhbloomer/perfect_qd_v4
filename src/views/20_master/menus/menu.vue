@@ -25,7 +25,7 @@
       <el-button :disabled="!settings.btnShowStatus.showAddSubNode" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddSubNode">添加子菜单-结点</el-button>
       <el-button :disabled="!settings.btnShowStatus.showAddSubMenu" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddSubMenu">添加子菜单-页面</el-button>
       <el-button :disabled="!settings.btnShowStatus.showUpdate" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleUpdate">修改</el-button>
-      <el-button :disabled="!settings.btnShowStatus.showExport" type="primary" icon="el-icon-circle-close" :loading="settings.listLoading" @click="handleRealyDelete">物理删除</el-button>
+      <el-button :disabled="!settings.btnShowStatus.showRealyDelete" type="primary" icon="el-icon-circle-close" :loading="settings.listLoading" @click="handleRealyDelete">物理删除</el-button>
     </el-button-group>
     <el-table
       ref="multipleTable"
@@ -210,8 +210,7 @@ export default {
           // 添加子菜单-结点：按钮
           showAddSubNode: false,
           showAddSubMenu: false,
-          showCopyInsert: false,
-          showExport: false
+          showRealyDelete: false
         },
         // loading 状态
         listLoading: true,
@@ -251,33 +250,21 @@ export default {
   },
   // 监听器
   watch: {
-    // 选中的数据，使得导出按钮可用，否则就不可使用
-    'dataJson.multipleSelection': {
-      handler(newVal, oldVal) {
-        if (newVal.length > 0) {
-          this.settings.btnShowStatus.showExport = true
-        } else {
-          this.settings.btnShowStatus.showExport = false
-        }
-      }
-    },
     // 当前行的选中
     'dataJson.currentJson': {
       handler(newVal, oldVal) {
-        if (this.dataJson.currentJson.id !== undefined) {
+        if (this.dataJson.currentJson !== undefined && this.dataJson.currentJson.id !== undefined) {
           // this.settings.btnShowStatus.doInsert = true
           this.settings.btnShowStatus.showAddSubNode = true
           this.settings.btnShowStatus.showAddSubMenu = true
           this.settings.btnShowStatus.showUpdate = true
-          this.settings.btnShowStatus.showCopyInsert = true
-          this.settings.btnShowStatus.showExport = true
+          this.settings.btnShowStatus.showRealyDelete = true
         } else {
           // this.settings.btnShowStatus.doInsert = false
           this.settings.btnShowStatus.showAddSubNode = false
           this.settings.btnShowStatus.showAddSubMenu = false
           this.settings.btnShowStatus.showUpdate = false
-          this.settings.btnShowStatus.showCopyInsert = false
-          this.settings.btnShowStatus.showExport = false
+          this.settings.btnShowStatus.showRealyDelete = false
         }
       },
       deep: true
@@ -435,6 +422,7 @@ export default {
         this.dataJson.paging = response.data.menu_data
         this.dataJson.paging.records = {}
       }).finally(() => {
+        this.dataJson.currentJson = undefined
         this.settings.listLoading = false
       })
     },
@@ -456,11 +444,11 @@ export default {
     // 删除按钮
     handleRealyDelete() {
       // 没有选择任何数据的情况
-      if (this.dataJson.tempJson.id === undefined) {
+      if (this.dataJson.currentJson.id === undefined) {
         this.showErrorMsg('请选择一条数据')
         return
       }
-      // 选择全部的时候
+      // 选择
       this.$confirm('请注意：将会删除当前节点以及子节点数据！！', '确认信息', {
         distinguishCancelAndClose: true,
         confirmButtonText: '确定',
@@ -479,7 +467,7 @@ export default {
     handleRealDeleteData() {
       // loading
       this.settings.listLoading = true
-      const tempData = Object.assign({}, this.dataJson.tempJson)
+      const tempData = Object.assign({}, this.dataJson.currentJson)
       // 开始删除
       realDeleteSelectionApi(tempData).then((_data) => {
         this.$notify({
@@ -622,7 +610,7 @@ export default {
     // -----------------添加子菜单-结点 end------------------
     // -----------------添加子菜单-页面 start------------------
     handleEditSubMenuDialogCloseMeOk(val) {
-      switch (this.popSettings.two.props.dialogStatus) {
+      switch (this.popSettings.three.props.dialogStatus) {
         case this.PARAMETERS.STATUS_INSERT:
           this.doInsertEditSubMenuCallBack(val)
           break
