@@ -111,7 +111,6 @@
         </el-row>
 
         <el-form-item label="URL：" prop="full_path">
-          xxx
           <div v-if="dataJson.tempJson.parent_path !== '/'">
             {{ dataJson.tempJson.parent_path + '/' + dataJson.tempJson.path }}
           </div>
@@ -366,7 +365,6 @@ export default {
       // 数据初始化
       this.dataJson.tempJson = deepCopy(this.data)
       this.dataJson.tempJsonOriginal = deepCopy(this.data)
-      this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.full_path
       this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.page_code + ')'
       // 设置按钮
       this.settings.btnShowStatus.showUpdate = true
