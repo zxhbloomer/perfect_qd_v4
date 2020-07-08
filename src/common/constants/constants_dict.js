@@ -67,7 +67,7 @@ const DICT_SYS_MENU_TYPE_ROOT = 'R'
 /** 节点  */
 const DICT_SYS_MENU_TYPE_NODE = 'N'
 /** 页面  */
-const DICT_SYS_MENU_TYPE_PAGE = 'N'
+const DICT_SYS_MENU_TYPE_PAGE = 'P'
 
 export default {
   /** 模块类型 */

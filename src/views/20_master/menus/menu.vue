@@ -380,11 +380,17 @@ export default {
           this.popSettings.one.visible = true
           this.popSettings.one.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
           break
-          // 根节点编辑
+          // 节点编辑
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
           this.popSettings.two.props.data = deepCopy(this.dataJson.currentJson)
           this.popSettings.two.visible = true
           this.popSettings.two.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
+          break
+          // 菜单编辑
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
+          this.popSettings.three.props.data = deepCopy(this.dataJson.currentJson)
+          this.popSettings.three.visible = true
+          this.popSettings.three.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
           break
       }
     },

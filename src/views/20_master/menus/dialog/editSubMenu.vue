@@ -59,12 +59,17 @@
               <input-search v-model.trim="dataJson.tempJson.page_info" :disabled="isUpdateModel && isViewModel" @onInputSearch="handlePageOpen" />
             </el-form-item>
           </el-col>
+          <el-col :span="12">
+            <el-form-item label="路由编号：" prop="route_name">
+              <el-input v-model.trim="dataJson.tempJson.route_name" clearable show-word-limit disabled />
+            </el-form-item>
+          </el-col>
         </el-row>
 
         <el-row>
           <el-col :span="12">
-            <el-form-item label="路由编号：" prop="route_name">
-              <el-input v-model.trim="dataJson.tempJson.route_name" clearable show-word-limit :disabled="!isSelectedPage" />
+            <el-form-item label="菜单名称：" prop="name">
+              <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit :disabled="!isSelectedPage" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -73,18 +78,7 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="菜单名称：" prop="name">
-              <el-input v-model.trim="dataJson.tempJson.name" clearable show-word-limit :disabled="!isSelectedPage" />
-            </el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="菜单类型：" prop="type_name">
-              <el-input v-model.trim="dataJson.tempJson.type_name" disabled clearable show-word-limit />
-            </el-form-item>
-          </el-col>
-        </el-row>
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="请求地址：" prop="path">
@@ -92,8 +86,8 @@
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="页面文件路径：" prop="component">
-              <el-input v-model.trim="dataJson.tempJson.component" clearable show-word-limit disabled />
+            <el-form-item label="菜单类型：" prop="type_name">
+              <el-input v-model.trim="dataJson.tempJson.type_name" disabled clearable show-word-limit />
             </el-form-item>
           </el-col>
         </el-row>
@@ -107,6 +101,11 @@
                 inactive-text="关闭"
                 :disabled="!isSelectedPage"
               />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="页面文件路径：" prop="component">
+              <el-input v-model.trim="dataJson.tempJson.component" clearable show-word-limit disabled />
             </el-form-item>
           </el-col>
         </el-row>
@@ -245,7 +244,6 @@ export default {
           disabledCopyInsert: true
         },
         rules: {
-          route_name: [{ required: true, message: '请输入路由编号', trigger: 'change' }],
           code: [{ required: true, message: '请输入菜单组编号', trigger: 'change' }],
           name: [{ required: true, message: '请输入菜单组名称', trigger: 'change' }],
           path: [{ required: true, message: '请输入请求地址', trigger: 'change' }]
@@ -340,7 +338,7 @@ export default {
       // 数据初始化
       this.initTempJsonOriginal()
       this.dataJson.tempJson = deepCopy(this.dataJson.tempJsonOriginal)
-      this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.path
+      this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.full_path
       this.dataJson.tempJson.parent_id = this.dataJson.tempJson.id
       this.dataJson.tempJson.id = undefined
       this.dataJson.tempJson.template_id = undefined
@@ -367,6 +365,8 @@ export default {
       // 数据初始化
       this.dataJson.tempJson = deepCopy(this.data)
       this.dataJson.tempJsonOriginal = deepCopy(this.data)
+      this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.full_path
+      this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.code + ')'
       // 设置按钮
       this.settings.btnShowStatus.showUpdate = true
       // 控件focus
@@ -502,7 +502,7 @@ export default {
       this.dataJson.tempJson.name = val.name
       this.dataJson.tempJson.code = val.code
       this.dataJson.tempJson.path = ''
-      this.dataJson.tempJson.route_name = val.code
+      // this.dataJson.tempJson.route_name = val.code
       this.dataJson.tempJson.meta_title = val.meta_title
       this.dataJson.tempJson.meta_icon = val.meta_icon
       this.dataJson.tempJson.component = val.component
