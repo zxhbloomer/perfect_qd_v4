@@ -567,16 +567,6 @@ export default {
       this.dataJson.multipleSelection = []
       this.$refs.multipleTable.clearSelection()
     },
-    // handleRowUpdate(row, _rowIndex) {
-    //   // 修改
-    //   this.dataJson.tempJson = Object.assign({}, row) // copy obj
-    //   this.dataJson.rowIndex = _rowIndex
-    //   this.popSettingsData.dialogStatus = 'update'
-    //   this.popSettingsData.dialogFormVisible = true
-    //   this.$nextTick(() => {
-    //     this.$refs['dataForm'].clearValidate()
-    //   })
-    // },
     // 删除操作
     handleDel(row) {
       let _message = ''
@@ -643,7 +633,7 @@ export default {
         return
       }
       // 修改
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
@@ -821,7 +811,7 @@ export default {
     doReset() {
       this.popSettingsData.btnResetStatus = true
       switch (this.popSettingsData.dialogStatus) {
-        case 'update':
+        case this.PARAMETERS.STATUS_UPDATE:
           // 数据初始化
           this.initPopUpStatus()
           // 复制数据

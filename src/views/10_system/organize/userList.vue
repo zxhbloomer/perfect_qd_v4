@@ -151,7 +151,7 @@ export default {
         return
       }
       // 修改
-      this.dialogStatus = 'update'
+      this.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.dialogVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()

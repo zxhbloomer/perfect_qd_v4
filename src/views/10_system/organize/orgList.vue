@@ -161,7 +161,7 @@ export default {
     handleRowUpdate(row) {
       // 修改
       this.temp = Object.assign({}, row) // copy obj
-      this.dialogStatus = 'update'
+      this.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
@@ -174,7 +174,7 @@ export default {
       }
 
       // 修改
-      this.dialogStatus = 'update'
+      this.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()

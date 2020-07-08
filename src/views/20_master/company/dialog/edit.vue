@@ -143,7 +143,7 @@
               <el-input v-model.trim="popSettings.one.selectedDataJson.detail_address" disabled />
             </el-form-item>
 
-            <el-row v-show="settings.dialogStatus === 'update' || isViewModel">
+            <el-row v-show="settings.dialogStatus === PARAMETERS.STATUS_UPDATE || isViewModel">
               <el-col :span="12">
                 <el-form-item label="更新人：" prop="u_name">
                   <el-input v-model.trim="dataJson.tempJson.u_name" disabled />

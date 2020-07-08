@@ -111,6 +111,7 @@
         </el-row>
 
         <el-form-item label="URL：" prop="full_path">
+          xxx
           <div v-if="dataJson.tempJson.parent_path !== '/'">
             {{ dataJson.tempJson.parent_path + '/' + dataJson.tempJson.path }}
           </div>
@@ -119,7 +120,7 @@
           </div>
         </el-form-item>
 
-        <el-row v-show="settings.dialogStatus === 'update' || isViewModel">
+        <el-row v-show="settings.dialogStatus === PARAMETERS.STATUS_UPDATE || isViewModel">
           <el-col :span="12">
             <el-form-item label="更新人：" prop="u_name">
               <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
@@ -471,7 +472,6 @@ export default {
         if (valid) {
           // const tempData = Object.assign({}, this.dataJson.tempJson)
           const tempData = deepCopy(this.dataJson.tempJson)
-          debugger
           if (tempData.parent_path !== '/') {
             tempData.full_path = tempData.parent_path + '/' + tempData.path
           } else {
@@ -507,16 +507,12 @@ export default {
       this.dataJson.tempJson.meta_icon = val.meta_icon
       this.dataJson.tempJson.component = val.component
       this.dataJson.tempJson.affix = false
-      debugger
       this.dataJson.tempJson.page_id = val.id
       this.dataJson.tempJson.page_code = val.code
-
       this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.page_code + ')'
       this.dataJson.tempJson.type = this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE
       this.dataJson.tempJson.type_name = '页面'
-
       this.dataJson.tempJson.full_path = ''
-
       this.popSettings.one.visible = false
     },
     handlePageCloseCancel() {

@@ -63,7 +63,7 @@
       <el-form-item label="描述：" prop="descr">
         <el-input v-model.trim="dataJson.tempJson.descr" clearable show-word-limit type="textarea" :maxlength="dataJson.inputSettings.maxLength.descr" :disabled="isViewModel" />
       </el-form-item>
-      <el-row v-show="settings.dialogStatus === 'update'">
+      <el-row v-show="settings.dialogStatus === PARAMETERS.STATUS_UPDATE">
         <el-col :span="12">
           <el-form-item label="更新人：" prop="u_name">
             <el-input v-model.trim="dataJson.tempJson.u_name" disabled />

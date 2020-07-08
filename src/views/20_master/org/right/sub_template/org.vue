@@ -246,7 +246,7 @@ export default {
     },
     // 是否为修改
     isChangeModel() {
-      if (this.popSettingsData.dialogStatus === 'update') {
+      if (this.popSettingsData.dialogStatus === this.PARAMETERS.STATUS_UPDATE) {
         return true
       } else {
         return false
@@ -427,7 +427,7 @@ export default {
       // 修改
       this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = _rowIndex
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
@@ -469,7 +469,7 @@ export default {
     doReset() {
       this.popSettingsData.btnResetStatus = true
       switch (this.popSettingsData.dialogStatus) {
-        case 'update':
+        case this.PARAMETERS.STATUS_UPDATE:
           // 数据初始化
           this.dataJson.tempJson = Object.assign({}, this.dataJson.tempJsonOriginal)
           // 初始化数据

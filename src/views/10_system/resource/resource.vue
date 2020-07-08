@@ -448,7 +448,7 @@ export default {
       // 修改
       this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = _rowIndex
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
@@ -525,7 +525,7 @@ export default {
         return
       }
       // 修改
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
@@ -679,7 +679,7 @@ export default {
             this.$refs['refType'].focus()
           })
           break
-        case 'update':
+        case this.PARAMETERS.STATUS_UPDATE:
           // 数据初始化
           this.dataJson.tempJson.name = ''
           this.dataJson.tempJson.descr = ''

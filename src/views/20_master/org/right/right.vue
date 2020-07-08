@@ -357,7 +357,7 @@ export default {
     doReset() {
       this.popSettingsData.btnResetStatus = true
       switch (this.popSettingsData.dialogStatus) {
-        case 'update':
+        case this.PARAMETERS.STATUS_UPDATE:
           // 数据初始化
           this.initPopUpStatus()
           // 复制数据

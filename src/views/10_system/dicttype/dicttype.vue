@@ -178,7 +178,7 @@
         <el-form-item label="描述：" prop="descr">
           <el-input v-model.trim="dataJson.tempJson.descr" clearable type="textarea" show-word-limit :maxlength="dataJson.inputSettings.maxLength.descr" />
         </el-form-item>
-        <el-row v-show="popSettingsData.dialogStatus === 'update'">
+        <el-row v-show="popSettingsData.dialogStatus === PARAMETERS.STATUS_UPDATE">
           <el-col :span="12">
             <el-form-item label="更新人：" prop="u_name">
               <el-input v-model.trim="dataJson.tempJson.u_id" disabled />
@@ -435,7 +435,7 @@ export default {
       // 修改
       this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = _rowIndex
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
@@ -512,7 +512,7 @@ export default {
         return
       }
       // 修改
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
@@ -662,7 +662,7 @@ export default {
     doReset() {
       this.popSettingsData.btnResetStatus = true
       switch (this.popSettingsData.dialogStatus) {
-        case 'update':
+        case this.PARAMETERS.STATUS_UPDATE:
           // 数据初始化
           this.dataJson.tempJson.name = ''
           this.dataJson.tempJson.descr = ''

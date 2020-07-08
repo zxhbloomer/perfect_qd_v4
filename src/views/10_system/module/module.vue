@@ -173,7 +173,7 @@
         <el-form-item label="描述：" prop="descr">
           <el-input v-model.trim="dataJson.tempJson.descr" placeholder="请输入" clearable type="textarea" show-word-limit :maxlength="dataJson.inputSettings.maxLength.descr" />
         </el-form-item>
-        <el-row v-show="popSettingsData.dialogStatus === 'update'">
+        <el-row v-show="popSettingsData.dialogStatus === PARAMETERS.STATUS_UPDATE">
           <el-col :span="12">
             <el-form-item label="更新人：" prop="u_name">
               <el-input v-model.trim="dataJson.tempJson.u_id" disabled />
@@ -477,7 +477,7 @@ export default {
   computed: {
     // 是否为更新模式
     isUpdate() {
-      if (this.popSettingsData.dialogStatus === 'update') {
+      if (this.popSettingsData.dialogStatus === this.PARAMETERS.STATUS_UPDATE) {
         return true
       } else {
         return false
@@ -523,7 +523,7 @@ export default {
         if (this.popSettingsData.dialogFormVisible) {
           this.initPopUpStatus()
           // 修改的情况下
-          if (this.popSettingsData.dialogStatus === 'update') {
+          if (this.popSettingsData.dialogStatus === this.PARAMETERS.STATUS_UPDATE) {
             this.initResourceData()
           }
         }
@@ -698,7 +698,7 @@ export default {
         return
       }
       // 修改
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
@@ -867,7 +867,7 @@ export default {
     doReset() {
       this.popSettingsData.btnResetStatus = true
       switch (this.popSettingsData.dialogStatus) {
-        case 'update':
+        case this.PARAMETERS.STATUS_UPDATE:
           // 数据初始化
           this.initPopUpStatus()
           // 复制数据

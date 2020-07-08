@@ -102,7 +102,7 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="参数名称：" prop="name">
-              <el-input ref="refInsertFocus" v-model.trim="dataJson.tempJson.name" controls-position="right" clearable show-word-limit :maxlength="dataJson.inputSettings.maxLength.name" :disabled="popSettingsData.dialogStatus==='update' || isViewModel" :placeholder="isPlaceholderShow('请输入')" />
+              <el-input ref="refInsertFocus" v-model.trim="dataJson.tempJson.name" controls-position="right" clearable show-word-limit :maxlength="dataJson.inputSettings.maxLength.name" :disabled="popSettingsData.dialogStatus===PARAMETERS.STATUS_UPDATE || isViewModel" :placeholder="isPlaceholderShow('请输入')" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -119,7 +119,7 @@
         <el-form-item label="描述：" prop="descr">
           <el-input v-model.trim="dataJson.tempJson.descr" clearable show-word-limit type="textarea" :maxlength="dataJson.inputSettings.maxLength.descr" :placeholder="isPlaceholderShow('请输入')" :disabled="isViewModel" />
         </el-form-item>
-        <el-row v-show="popSettingsData.dialogStatus === 'update' || isViewModel">
+        <el-row v-show="popSettingsData.dialogStatus === PARAMETERS.STATUS_UPDATE || isViewModel">
           <el-col :span="12">
             <el-form-item label="更新人：" prop="u_name">
               <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
@@ -316,7 +316,7 @@ export default {
         if (this.popSettingsData.dialogFormVisible) {
           this.initPopUpStatus()
           // 修改的情况下
-          if (this.popSettingsData.dialogStatus === 'update') {
+          if (this.popSettingsData.dialogStatus === this.PARAMETERS.STATUS_UPDATE) {
             // this.initSelectData()
           }
         }
@@ -370,7 +370,7 @@ export default {
       // 修改
       this.dataJson.tempJson = Object.assign({}, row) // copy obj
       this.dataJson.rowIndex = _rowIndex
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
@@ -403,7 +403,7 @@ export default {
         return
       }
       // 修改
-      this.popSettingsData.dialogStatus = 'update'
+      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
       this.popSettingsData.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataSubmitForm'].clearValidate()
@@ -583,7 +583,7 @@ export default {
     doReset() {
       this.popSettingsData.btnResetStatus = true
       switch (this.popSettingsData.dialogStatus) {
-        case 'update':
+        case this.PARAMETERS.STATUS_UPDATE:
           // 复制数据
           this.dataJson.tempJson = Object.assign({}, this.dataJson.tempJsonOriginal)
           // 设置控件焦点focus

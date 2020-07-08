@@ -76,7 +76,7 @@
       <el-form-item label="标签：" prop="tag">
         <radio-dict v-model="dataJson.tempJson.tag" :para="CONSTANTS.DICT_SYS_ADDRESS_TAG_TYPE" :disabled="isViewModel" @change="handleRadioDictChange" />
       </el-form-item>
-      <el-row v-show="settings.dialogStatus === 'update'">
+      <el-row v-show="settings.dialogStatus === PARAMETERS.STATUS_UPDATE">
         <el-col :span="12">
           <el-form-item label="更新人：" prop="u_name">
             <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
