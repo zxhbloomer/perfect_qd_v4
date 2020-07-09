@@ -135,6 +135,11 @@ export const asyncRoutes = [
         name: 'P00000190',
         meta: { title: 'vue页面维护', icon: 'syscode' }
       },
+      { path: 'icons',
+        component: () => import('@/views/10_system/icons/icon'),
+        name: 'P00000230',
+        meta: { title: '系统icon', icon: 'icons' }
+      },
       {
         path: 'dic',
         // component: subMenu,

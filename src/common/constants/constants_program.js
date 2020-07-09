@@ -53,6 +53,8 @@ const P_SYS_PAGES = 'P00000200'
 const P_SYS_PAGE_FUNCTIONS = 'P00000210'
 /** 菜单维护 */
 const P_MENUS = 'P00000220'
+/** 系统icon */
+const P_ICONS = 'P00000230'
 
 export default {
   /** 组织机构 */
@@ -107,5 +109,7 @@ export default {
   /** 页面按钮维护 */
   P_SYS_PAGE_FUNCTIONS,
   /** 菜单维护 */
-  P_MENUS
+  P_MENUS,
+  /** 系统icon */
+  P_ICONS
 }
