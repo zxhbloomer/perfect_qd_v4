@@ -1,114 +1,126 @@
 <template>
-  <!-- pop窗口 数据编辑:新增、修改、步骤窗体-->
-  <el-dialog
-    v-if="listenVisible"
-    v-el-drag-dialog
-    v-loading="settings.loading"
-    element-loading-text="拼命加载中，请稍后..."
-    element-loading-background="rgba(255, 255, 255, 0.7)"
-    :title="settings.textMap[settings.dialogStatus]"
-    :visible="visible"
-    :close-on-click-modal="PARAMETERS.DIALOG_CLOSE_BY_CLICK"
-    :close-on-press-escape="PARAMETERS.DIALOG_CLOSE_BY_ESC"
-    :show-close="PARAMETERS.DIALOG_SHOW_CLOSE"
-    :append-to-body="true"
-    :modal-append-to-body="true"
-    width="900px"
-    destroy-on-close
-  >
-    <el-form
-      ref="dataSubmitForm"
-      :rules="settings.rules"
-      :model="dataJson.tempJson"
-      label-position="rigth"
-      label-width="120px"
-      status-icon
+  <div>
+    <!-- pop窗口 数据编辑:新增、修改、步骤窗体-->
+    <el-dialog
+      v-if="listenVisible"
+      v-el-drag-dialog
+      v-loading="settings.loading"
+      element-loading-text="拼命加载中，请稍后..."
+      element-loading-background="rgba(255, 255, 255, 0.7)"
+      :title="settings.textMap[settings.dialogStatus]"
+      :visible="visible"
+      :close-on-click-modal="PARAMETERS.DIALOG_CLOSE_BY_CLICK"
+      :close-on-press-escape="PARAMETERS.DIALOG_CLOSE_BY_ESC"
+      :show-close="PARAMETERS.DIALOG_SHOW_CLOSE"
+      :append-to-body="true"
+      :modal-append-to-body="true"
+      width="900px"
+      destroy-on-close
     >
-      <el-alert title="上级菜单信息" type="info" :closable="false" />
-      <br>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="上级菜单：" prop="parent_id">
-            <el-cascader
-              v-model="dataJson.tempJson.depth_id_array"
-              placeholder="请选择"
-              :options="dataJson.cascader.data"
-              filterable
-              clearable
-              :props="{ checkStrictly: true, expandTrigger: 'hover'}"
-              style="width: 100%"
-              disabled
-            />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="请求地址：" prop="parent_path">
-            {{ dataJson.tempJson.parent_path }}
-          </el-form-item>
-        </el-col>
-      </el-row>
+      <el-form
+        ref="dataSubmitForm"
+        :rules="settings.rules"
+        :model="dataJson.tempJson"
+        label-position="rigth"
+        label-width="120px"
+        status-icon
+      >
+        <el-alert title="上级菜单信息" type="info" :closable="false" />
+        <br>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="上级菜单：" prop="parent_id">
+              <el-cascader
+                v-model="dataJson.tempJson.depth_id_array"
+                placeholder="请选择"
+                :options="dataJson.cascader.data"
+                filterable
+                clearable
+                :props="{ checkStrictly: true, expandTrigger: 'hover'}"
+                style="width: 100%"
+                disabled
+              />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="请求地址：" prop="parent_path">
+              {{ dataJson.tempJson.parent_path }}
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-alert title="添加子菜单-结点信息" type="info" :closable="false" />
-      <br>
+        <el-alert title="添加子菜单-结点信息" type="info" :closable="false" />
+        <br>
 
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="结点名称：" prop="name">
-            <el-input ref="refFocus" v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="icon：" prop="meta_icon">
-            <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="结点名称：" prop="name">
+              <el-input ref="refFocus" v-model.trim="dataJson.tempJson.name" clearable show-word-limit />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="icon：" prop="meta_icon">
+              <input-search v-model.trim="dataJson.tempJson.meta_icon" :disabled="isUpdateModel && isViewModel" @onInputSearch="handleSysIconOpen">
+                <template slot="prepend">
+                  <svg-icon :icon-class="dataJson.tempJson.meta_icon" :class="dataJson.tempJson.meta_icon" />
+                </template>
+              </input-search>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="请求地址：" prop="path">
-            <el-input v-model.trim="dataJson.tempJson.path" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="菜单类型：" prop="type_name">
-            <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
-          </el-form-item>
-        </el-col>
-      </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="请求地址：" prop="path">
+              <el-input v-model.trim="dataJson.tempJson.path" clearable show-word-limit />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="菜单类型：" prop="type_name">
+              <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
-      <el-form-item label="URL：" prop="full_path">
-        <div v-if="dataJson.tempJson.parent_path !== '/'">
-          {{ dataJson.tempJson.parent_path + '/' + dataJson.tempJson.path }}
+        <el-form-item label="URL：" prop="full_path">
+          <div v-if="dataJson.tempJson.parent_path !== '/'">
+            {{ dataJson.tempJson.parent_path + '/' + dataJson.tempJson.path }}
+          </div>
+          <div v-else>
+            {{ dataJson.tempJson.parent_path + dataJson.tempJson.path }}
+          </div>
+        </el-form-item>
+
+        <el-row v-show="settings.dialogStatus === PARAMETERS.STATUS_UPDATE || isViewModel">
+          <el-col :span="12">
+            <el-form-item label="更新人：" prop="u_name">
+              <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="更新时间：" prop="u_time">
+              <el-input v-model.trim="dataJson.tempJson.u_time" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-divider />
+        <div class="floatLeft">
+          <el-button type="danger" :disabled="settings.loading || settings.btnDisabledStatus.disabledReset" @click="doReset()">重置</el-button>
         </div>
-        <div v-else>
-          {{ dataJson.tempJson.parent_path + dataJson.tempJson.path }}
-        </div>
-      </el-form-item>
-
-      <el-row v-show="settings.dialogStatus === PARAMETERS.STATUS_UPDATE || isViewModel">
-        <el-col :span="12">
-          <el-form-item label="更新人：" prop="u_name">
-            <el-input v-model.trim="dataJson.tempJson.u_name" disabled />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="更新时间：" prop="u_time">
-            <el-input v-model.trim="dataJson.tempJson.u_time" disabled />
-          </el-form-item>
-        </el-col>
-      </el-row>
-    </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-divider />
-      <div class="floatLeft">
-        <el-button type="danger" :disabled="settings.loading || settings.btnDisabledStatus.disabledReset" @click="doReset()">重置</el-button>
+        <el-button plain :disabled="settings.loading" @click="handleCancel()">取消</el-button>
+        <el-button v-show="settings.btnShowStatus.showInsert" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledInsert " @click="doInsert()">确定</el-button>
+        <el-button v-show="settings.btnShowStatus.showUpdate" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledUpdate " @click="doUpdate()">确定</el-button>
       </div>
-      <el-button plain :disabled="settings.loading" @click="handleCancel()">取消</el-button>
-      <el-button v-show="settings.btnShowStatus.showInsert" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledInsert " @click="doInsert()">确定</el-button>
-      <el-button v-show="settings.btnShowStatus.showUpdate" plain type="primary" :disabled="settings.loading || settings.btnDisabledStatus.disabledUpdate " @click="doUpdate()">确定</el-button>
-    </div>
-  </el-dialog>
+    </el-dialog>
+    <sys-icon-dialog
+      v-if="popSettings.two.visible"
+      :visible="popSettings.two.visible"
+      @closeMeOk="handleSysIconCloseOk"
+      @closeMeCancel="handleSysIconCloseCancel"
+    />
+  </div>
 </template>
 
 <style scoped>
@@ -128,9 +140,11 @@ import constants_para from '@/common/constants/constants_para'
 import deepCopy from 'deep-copy'
 import elDragDialog from '@/directive/el-drag-dialog'
 import { addSubNodeApi, updateApi, getCascaderListApi } from '@/api/20_master/menus/menu'
+import InputSearch from '@/components/40_input/inputSearch'
+import sysIconDialog from '@/views/10_system/icons/dialog/dialog'
 
 export default {
-  components: { },
+  components: { InputSearch, sysIconDialog },
   directives: { elDragDialog },
   mixins: [],
   props: {
@@ -202,6 +216,17 @@ export default {
           code: [{ required: true, message: '请输入菜单组编号', trigger: 'change' }],
           name: [{ required: true, message: '请输入菜单组名称', trigger: 'change' }],
           path: [{ required: true, message: '请输入请求地址', trigger: 'change' }]
+        }
+      },
+      popSettings: {
+        // 弹出编辑页面
+        two: {
+          visible: false,
+          props: {
+            id: undefined,
+            data: {},
+            dialogStatus: ''
+          }
         }
       }
     }
@@ -419,7 +444,19 @@ export default {
     handleCascaderChange(val) {
       // 数组中最后一个才是parent_id
       this.dataJson.tempJson.parent_id = val[val.length - 1]
+    },
+    // ------------------system icon input search start --------------------
+    handleSysIconOpen() {
+      this.popSettings.two.visible = true
+    },
+    handleSysIconCloseOk(val) {
+      this.dataJson.tempJson.meta_icon = val
+      this.popSettings.two.visible = false
+    },
+    handleSysIconCloseCancel() {
+      this.popSettings.two.visible = false
     }
+    // ------------------system icon input search end--------------------
   }
 }
 </script>

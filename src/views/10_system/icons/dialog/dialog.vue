@@ -18,12 +18,11 @@
       ref="dialogRef"
       :data-model="dataModel"
       :me-dialog-status="visible"
-      @rowDbClick="handleRowDbClick"
+      @iconDbClick="handleIconDbClick"
     />
     <div slot="footer" class="dialog-footer">
       <el-divider />
       <el-button plain @click="handleDoCancel()">取消</el-button>
-      <el-button :disabled="dataJson.settings.btnDisabledStatus.disabledOk" @click="handleDoOk()">确定</el-button>
     </div>
   </el-dialog>
 </template>
@@ -100,12 +99,8 @@ export default {
     this.$store.dispatch('popUpSearchDialog/selectedDataJson', null)
   },
   methods: {
-    handleRowDbClick(val) {
-      this.$emit('closeMeOk', this.$store.getters.selectedDataJson)
-    },
-    // 确定
-    handleDoOk() {
-      this.$emit('closeMeOk', this.$store.getters.selectedDataJson)
+    handleIconDbClick(val) {
+      this.$emit('closeMeOk', val)
     },
     // 取消
     handleDoCancel() {

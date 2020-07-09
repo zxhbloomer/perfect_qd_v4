@@ -1,41 +1,39 @@
 <template>
-  <div class="app-container" :style="dataJson.tabHeightStyle">
-    <el-scrollbar>
-      <el-tabs>
-        <el-tab-pane>
-          <template slot="label">系统图标集合
-            <el-badge v-show="settings.badge.countOne>0" :value="settings.badge.countOne" type="danger" />
-          </template>
-          <section class="content element-doc content">
-            <ul class="icon-list">
-              <li v-for="(item) in dataJson.vueIcons" :key="item">
-                <span>
-                  <i :class="item" />
-                  <span class="icon-name">{{ item }}</span>
-                </span>
-              </li>
-            </ul>
-          </section>
-        </el-tab-pane>
-        <el-tab-pane>
-          <template slot="label">扩展图标集合
-            <el-badge v-show="settings.badge.countTwo>0" :value="settings.badge.countTwo" type="danger" />
-          </template>
-          <section class="content element-doc content">
-            <ul class="icon-list">
-              <li v-for="(item) in dataJson.svgs" :key="item">
-                <span>
-                  <i>
-                    <svg-icon :icon-class="item" />
-                  </i>
-                  <span class="icon-name">{{ item }}</span>
-                </span>
-              </li>
-            </ul>
-          </section>
-        </el-tab-pane>
-      </el-tabs>
-    </el-scrollbar>
+  <div class="app-container">
+    <el-tabs>
+      <!-- <el-tab-pane>
+        <template slot="label">系统图标集合
+          <el-badge v-show="settings.badge.countOne>0" ref="minusTabOne" :value="settings.badge.countOne" type="danger" />
+        </template>
+        <section class="content element-doc content" :style="dataJson.tabHeightStyle" style="overflow-y:auto;overflow-x:hidden;">
+          <ul class="icon-list">
+            <li v-for="(item) in dataJson.vueIcons" :key="item" @dblclick="setIcon(item)">
+              <span>
+                <i :class="item" />
+                <span class="icon-name">{{ item }}</span>
+              </span>
+            </li>
+          </ul>
+        </section>
+      </el-tab-pane> -->
+      <el-tab-pane>
+        <template slot="label">图标集合
+          <el-badge v-show="settings.badge.countTwo>0" ref="minusTabTwo" :value="settings.badge.countTwo" type="danger" />
+        </template>
+        <section class="content element-doc content" :style="dataJson.tabHeightStyle" style="overflow-y:auto;overflow-x:hidden;">
+          <ul class="icon-list">
+            <li v-for="(item) in dataJson.svgs" :key="item" @dblclick="setIcon(item)">
+              <span>
+                <i>
+                  <svg-icon :icon-class="item" />
+                </i>
+                <span class="icon-name">{{ item }}</span>
+              </span>
+            </li>
+          </ul>
+        </section>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 
@@ -459,6 +457,11 @@ export default {
         const name = key.substring(2).substring(0, key.substring(2).indexOf('.svg'))
         this.dataJson.svgs.push(name)
       })
+    },
+    setIcon(val) {
+      if (this.meDialogStatus) {
+        this.$emit('iconDbClick', val)
+      }
     }
   }
 }

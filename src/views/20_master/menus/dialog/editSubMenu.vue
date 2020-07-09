@@ -14,7 +14,7 @@
       :show-close="PARAMETERS.DIALOG_SHOW_CLOSE"
       :append-to-body="true"
       :modal-append-to-body="true"
-      width="900px"
+      width="1000px"
       destroy-on-close
     >
       <el-form
@@ -74,8 +74,11 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="icon：" prop="meta_icon">
-              <!-- <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit :disabled="!isSelectedPage" /> -->
-              <input-search v-model.trim="dataJson.tempJson.meta_icon" :disabled="isUpdateModel && isViewModel" @onInputSearch="handleSysIconOpen" />
+              <input-search v-model.trim="dataJson.tempJson.meta_icon" :disabled="isUpdateModel && isViewModel" @onInputSearch="handleSysIconOpen">
+                <template slot="prepend">
+                  <svg-icon :icon-class="dataJson.tempJson.meta_icon" :class="dataJson.tempJson.meta_icon" />
+                </template>
+              </input-search>
             </el-form-item>
           </el-col>
         </el-row>
@@ -531,7 +534,8 @@ export default {
       this.popSettings.two.visible = true
     },
     handleSysIconCloseOk(val) {
-
+      this.dataJson.tempJson.meta_icon = val
+      this.popSettings.two.visible = false
     },
     handleSysIconCloseCancel() {
       this.popSettings.two.visible = false
