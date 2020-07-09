@@ -74,7 +74,8 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="icon：" prop="meta_icon">
-              <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit :disabled="!isSelectedPage" />
+              <!-- <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit :disabled="!isSelectedPage" /> -->
+              <input-search v-model.trim="dataJson.tempJson.meta_icon" :disabled="isUpdateModel && isViewModel" @onInputSearch="handleSysIconOpen" />
             </el-form-item>
           </el-col>
         </el-row>
@@ -149,6 +150,12 @@
       @closeMeOk="handlePageCloseOk"
       @closeMeCancel="handlePageCloseCancel"
     />
+    <sys-icon-dialog
+      v-if="popSettings.two.visible"
+      :visible="popSettings.two.visible"
+      @closeMeOk="handleSysIconCloseOk"
+      @closeMeCancel="handleSysIconCloseCancel"
+    />
 
   </div>
 </template>
@@ -172,10 +179,11 @@ import elDragDialog from '@/directive/el-drag-dialog'
 import { addSubMenuApi, updateApi, getCascaderListApi } from '@/api/20_master/menus/menu'
 import InputSearch from '@/components/40_input/inputSearch'
 import pageDialog from '@/views/10_system/pages/page/dialog/dialog'
+import sysIconDialog from '@/views/10_system/icons/dialog/dialog'
 import { isNotEmpty } from '@/utils/index.js'
 
 export default {
-  components: { InputSearch, pageDialog },
+  components: { InputSearch, pageDialog, sysIconDialog },
   directives: { elDragDialog },
   mixins: [],
   props: {
@@ -252,6 +260,14 @@ export default {
       popSettings: {
         // 弹出编辑页面
         one: {
+          visible: false,
+          props: {
+            id: undefined,
+            data: {},
+            dialogStatus: ''
+          }
+        },
+        two: {
           visible: false,
           props: {
             id: undefined,
@@ -484,7 +500,7 @@ export default {
       // 数组中最后一个才是parent_id
       this.dataJson.tempJson.parent_id = val[val.length - 1]
     },
-    // ------------------input search start--------------------
+    // ------------------页面选择 input search start --------------------
     handlePageOpen() {
       this.popSettings.one.visible = true
     },
@@ -508,8 +524,19 @@ export default {
     },
     handlePageCloseCancel() {
       this.popSettings.one.visible = false
+    },
+    // ------------------页面选择 input search end--------------------
+    // ------------------system icon input search start --------------------
+    handleSysIconOpen() {
+      this.popSettings.two.visible = true
+    },
+    handleSysIconCloseOk(val) {
+
+    },
+    handleSysIconCloseCancel() {
+      this.popSettings.two.visible = false
     }
-    // ------------------input search end--------------------
+    // ------------------system icon input search end--------------------
   }
 }
 </script>

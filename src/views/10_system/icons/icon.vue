@@ -1,40 +1,41 @@
 <template>
-  <div class="app-container">
-    <el-backtop />
-    <el-tabs>
-      <el-tab-pane>
-        <template slot="label">系统图标集合
-          <el-badge v-show="settings.badge.countOne>0" :value="settings.badge.countOne" type="danger" />
-        </template>
-        <section class="content element-doc content">
-          <ul class="icon-list">
-            <li v-for="(item) in dataJson.vueIcons" :key="item">
-              <span>
-                <i :class="item" />
-                <span class="icon-name">{{ item }}</span>
-              </span>
-            </li>
-          </ul>
-        </section>
-      </el-tab-pane>
-      <el-tab-pane>
-        <template slot="label">扩展图标集合
-          <el-badge v-show="settings.badge.countTwo>0" :value="settings.badge.countTwo" type="danger" />
-        </template>
-        <section class="content element-doc content">
-          <ul class="icon-list">
-            <li v-for="(item) in dataJson.svgs" :key="item">
-              <span>
-                <i>
-                  <svg-icon :icon-class="item" />
-                </i>
-                <span class="icon-name">{{ item }}</span>
-              </span>
-            </li>
-          </ul>
-        </section>
-      </el-tab-pane>
-    </el-tabs>
+  <div class="app-container" :style="dataJson.tabHeightStyle">
+    <el-scrollbar>
+      <el-tabs>
+        <el-tab-pane>
+          <template slot="label">系统图标集合
+            <el-badge v-show="settings.badge.countOne>0" :value="settings.badge.countOne" type="danger" />
+          </template>
+          <section class="content element-doc content">
+            <ul class="icon-list">
+              <li v-for="(item) in dataJson.vueIcons" :key="item">
+                <span>
+                  <i :class="item" />
+                  <span class="icon-name">{{ item }}</span>
+                </span>
+              </li>
+            </ul>
+          </section>
+        </el-tab-pane>
+        <el-tab-pane>
+          <template slot="label">扩展图标集合
+            <el-badge v-show="settings.badge.countTwo>0" :value="settings.badge.countTwo" type="danger" />
+          </template>
+          <section class="content element-doc content">
+            <ul class="icon-list">
+              <li v-for="(item) in dataJson.svgs" :key="item">
+                <span>
+                  <i>
+                    <svg-icon :icon-class="item" />
+                  </i>
+                  <span class="icon-name">{{ item }}</span>
+                </span>
+              </li>
+            </ul>
+          </section>
+        </el-tab-pane>
+      </el-tabs>
+    </el-scrollbar>
   </div>
 </template>
 
@@ -137,6 +138,7 @@ export default {
   data() {
     return {
       dataJson: {
+        tabHeightStyle: '',
         svgs: [],
         vueIcons: [
           'el-icon-platform-eleme',

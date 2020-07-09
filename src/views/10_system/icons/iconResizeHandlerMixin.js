@@ -7,16 +7,16 @@ export default {
     window.addEventListener('resize', this.resizeHandler)
   },
   mounted() {
-    this.setUIheight()
+    this.dataJson.tabHeightStyle = 'height:' + this.setUIheight() + 'px'
   },
   created() {
   },
   updated() {
-    this.setUIheight()
+    this.dataJson.tabHeightStyle = 'height:' + this.setUIheight() + 'px'
   },
   methods: {
     resizeHandler() {
-      this.setUIheight()
+      this.dataJson.tabHeightStyle = 'height:' + this.setUIheight() + 'px'
     },
     setUIheight() {
       try {
@@ -32,14 +32,11 @@ export default {
             val = val + listRefsNames[i].$el.offsetHeight
           }
         }
-        let rtnVal = elementHeight - val - 20
-
+        let rtnVal = elementHeight - val
         // 判断是否是弹出框
         if (this.meDialogStatus) {
           rtnVal = rtnVal - 170
         }
-        // 此处使用的是页面上的值
-        this.settings.tableHeight = rtnVal
         return rtnVal
       } catch (error) {
         console.log('mixin error')
