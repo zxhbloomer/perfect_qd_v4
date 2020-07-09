@@ -47,7 +47,12 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column header-align="center" type="index" width="45" />
-      <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="name" label="菜单名称" />
+      <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="name" label="菜单名称">
+        <template v-slot="scope">
+          <svg-icon v-if="scope.row.meta_icon" :icon-class="scope.row.meta_icon" :class="scope.row.meta_icon" />
+          {{ scope.row.name }}
+        </template>
+      </el-table-column>
       <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="full_path" label="请求地址" />
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="code" label="菜单编号" /> -->
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="80" prop="type_name" label="菜单类型" /> -->
@@ -257,14 +262,14 @@ export default {
           // 根据菜单类型，设置按钮是否可用
           switch (this.dataJson.currentJson.type) {
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
-              // 根节点
+              // 根结点
               this.settings.btnShowStatus.showAddSubNode = true
               this.settings.btnShowStatus.showAddSubMenu = true
               this.settings.btnShowStatus.showUpdate = true
               this.settings.btnShowStatus.showRealyDelete = true
               break
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
-              // 节点
+              // 结点
               this.settings.btnShowStatus.showAddSubNode = true
               this.settings.btnShowStatus.showAddSubMenu = true
               this.settings.btnShowStatus.showUpdate = true
@@ -380,13 +385,13 @@ export default {
         return
       }
       switch (this.dataJson.currentJson.type) {
-        // 根节点编辑
+        // 根结点编辑
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
           this.popSettings.one.props.data = deepCopy(this.dataJson.currentJson)
           this.popSettings.one.visible = true
           this.popSettings.one.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
           break
-          // 节点编辑
+          // 结点编辑
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
           this.popSettings.two.props.data = deepCopy(this.dataJson.currentJson)
           this.popSettings.two.visible = true
@@ -467,7 +472,7 @@ export default {
         return
       }
       // 选择
-      this.$confirm('请注意：将会删除当前节点以及子节点数据！！', '确认信息', {
+      this.$confirm('请注意：将会删除当前结点以及子结点数据！！', '确认信息', {
         distinguishCancelAndClose: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消'

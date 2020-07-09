@@ -339,7 +339,7 @@ export function convertToOneRouter(orignal, _path) {
   return asyncRoutesConvertToOneRouter
 }
 
-// 查找子节点
+// 查找子结点
 function findChilds(children, _path, _parent, _childrens) {
   let path = _path === undefined ? '' : _path + '/'
   for (const _childItem of children) {

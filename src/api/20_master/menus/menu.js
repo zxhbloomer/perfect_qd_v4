@@ -49,7 +49,7 @@ export function addMenuGroupApi(data) {
 }
 
 /**
- * 新增子节点
+ * 新增子结点
  * @param {*} data
  */
 export function addSubNodeApi(data) {

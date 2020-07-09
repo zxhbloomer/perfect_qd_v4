@@ -62,9 +62,9 @@ const DICT_ORG_USED_TYPE_SHOW_UNUSED = '10'
 const DICT_ORG_USED_TYPE_SHOW_ALL = null
 /** 菜单类型  */
 const DICT_SYS_MENU_TYPE = 'sys_menu_type'
-/** 根节点  */
+/** 根结点  */
 const DICT_SYS_MENU_TYPE_ROOT = 'R'
-/** 节点  */
+/** 结点  */
 const DICT_SYS_MENU_TYPE_NODE = 'N'
 /** 页面  */
 const DICT_SYS_MENU_TYPE_PAGE = 'P'
@@ -124,9 +124,9 @@ export default {
   DICT_ORG_USED_TYPE_SHOW_ALL,
   /** 菜单类型  */
   DICT_SYS_MENU_TYPE,
-  /** 根节点  */
+  /** 根结点  */
   DICT_SYS_MENU_TYPE_ROOT,
-  /** 节点  */
+  /** 结点  */
   DICT_SYS_MENU_TYPE_NODE,
   /** 页面  */
   DICT_SYS_MENU_TYPE_PAGE

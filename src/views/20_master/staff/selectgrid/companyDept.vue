@@ -197,7 +197,7 @@
     position: relative;
     padding-left: 2px;
   }
-  //节点有间隙，隐藏掉展开按钮就好了,如果觉得空隙没事可以删掉
+  //结点有间隙，隐藏掉展开按钮就好了,如果觉得空隙没事可以删掉
   .el-tree-node__expand-icon.is-leaf{
     // display: none;
     color: transparent;
@@ -493,7 +493,7 @@ export default {
         })
       })
     },
-    // 获取当前的选中的节点
+    // 获取当前的选中的结点
     getCurrentElement(treeData, val) {
       if (isNotEmpty(this.dataJson.node)) {
         return this.dataJson.node
@@ -543,7 +543,7 @@ export default {
       this.dataJson.tempJson.inputData = this.dataJson.currentJson.name
       this.settings.visible = false
     },
-    // 当前选中节点变化时触发的事件
+    // 当前选中结点变化时触发的事件
     handleCurrentChange(row) {
       this.dataJson.currentJson = Object.assign({}, row) // copy obj
       this.dataJson.tempJsonOriginal = Object.assign({}, row) // copy obj

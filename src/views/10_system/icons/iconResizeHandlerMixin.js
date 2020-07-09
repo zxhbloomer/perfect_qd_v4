@@ -32,7 +32,7 @@ export default {
             val = val + listRefsNames[i].$el.offsetHeight
           }
         }
-        let rtnVal = elementHeight - val
+        let rtnVal = elementHeight - val - 32
         // 判断是否是弹出框
         if (this.meDialogStatus) {
           rtnVal = rtnVal - 170

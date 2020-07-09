@@ -60,13 +60,13 @@ export default {
       warn(false, messages.renamed('refreshIframe'))
     },
 
-    // 根据 url 获取 iframe 节点
+    // 根据 url 获取 iframe 结点
     getIframeEl(url) {
       const name = this.iframeNamePrefix + url
       return document.getElementsByName(name)[0]
     },
 
-    // iframe 节点 mounted
+    // iframe 结点 mounted
     iframeMounted(url) {
       const iframe = this.getIframeEl(url)
       this.$emit('iframe-mounted', url, iframe)

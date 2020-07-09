@@ -252,7 +252,7 @@ export default {
         return false
       }
     },
-    // 是否为根节点
+    // 是否为根结点
     isRootNode() {
       if (this.dataJson.tempJson.type === null || this.dataJson.tempJson.type === '') {
         return true
@@ -260,7 +260,7 @@ export default {
         return false
       }
     },
-    // 是否为目录节点
+    // 是否为目录结点
     isCONTENTSNode() {
       if (this.dataJson.tempJson.type === this.CONSTANTS.DICT_SYS_MODULE_TYPE_CONTENTS) {
         return true
@@ -268,7 +268,7 @@ export default {
         return false
       }
     },
-    // 是否为菜单节点
+    // 是否为菜单结点
     isMENUNode() {
       if (this.dataJson.tempJson.type === this.CONSTANTS.DICT_SYS_MODULE_TYPE_MENU) {
         return true
@@ -572,7 +572,7 @@ export default {
         return
       }
       // 选择全部的时候
-      this.$confirm('请注意：将会删除当前节点以及子节点数据！！', '确认信息', {
+      this.$confirm('请注意：将会删除当前结点以及子结点数据！！', '确认信息', {
         distinguishCancelAndClose: true,
         confirmButtonText: '确定',
         cancelButtonText: '取消'

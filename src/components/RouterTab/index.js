@@ -242,7 +242,7 @@ export default {
       // if (!this.isViewAlive) this.isViewAlive = true
     },
 
-    // 修复：当快速频繁切换页签时，旧页面离开过渡效果尚未完成，新页面内容无法正常 mount，内容节点为 comment 类型
+    // 修复：当快速频繁切换页签时，旧页面离开过渡效果尚未完成，新页面内容无法正常 mount，内容结点为 comment 类型
     fixCommentPage() {
       if (this.$alive.$el.nodeType === 8) {
         this.reloadView(true)

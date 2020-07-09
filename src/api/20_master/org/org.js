@@ -145,7 +145,7 @@ export function insertApi(data) {
 }
 
 /**
- * 新增模式下，可新增子节点得类型
+ * 新增模式下，可新增子结点得类型
  * @param {*} data
  */
 export function getCorrectTypeByInsertStatusApi(data) {
@@ -157,7 +157,7 @@ export function getCorrectTypeByInsertStatusApi(data) {
 }
 
 /**
- * 删除子节点
+ * 删除子结点
  * @param {*} data
  */
 export function deleteApi(data) {

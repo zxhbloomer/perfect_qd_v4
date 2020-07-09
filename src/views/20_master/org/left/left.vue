@@ -228,7 +228,7 @@
     position: relative;
     padding-left: 2px;
   }
-  //节点有间隙，隐藏掉展开按钮就好了,如果觉得空隙没事可以删掉
+  //结点有间隙，隐藏掉展开按钮就好了,如果觉得空隙没事可以删掉
   .el-tree-node__expand-icon.is-leaf{
     // display: none;
     color: transparent;
@@ -367,8 +367,8 @@ export default {
         // 弹出窗口状态名称
         dialogStatus: '',
         textMap: {
-          update: '请选择要修改节点的类型',
-          insert: '请选择添加下级节点类型'
+          update: '请选择要修改结点的类型',
+          insert: '请选择添加下级结点类型'
         },
         dialogFormVisible: false,
         btnDisabledStatus: {
@@ -425,7 +425,7 @@ export default {
     'dataJson.currentJson': {
       handler(newVal, oldVal) {
         if (newVal !== null) {
-          // 判断是否是第一个节点：第一个节点是租户，所以不能删除，修改，只能新增
+          // 判断是否是第一个结点：第一个结点是租户，所以不能删除，修改，只能新增
           if (this.dataJson.currentJson.parent_id === null) {
             this.settings.btnDisabledStatus.disabledInsert = false
             this.settings.btnDisabledStatus.disabledUpdate = true
@@ -595,7 +595,7 @@ export default {
       this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_INSERT
       this.popSettingsData.dialogFormVisible = true
     },
-    // 修改当前节点按钮
+    // 修改当前结点按钮
     handleUpdate() {
       // 修改
       // this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
@@ -647,7 +647,7 @@ export default {
       }
     },
     handleDelete() {
-      this.$confirm('请注意：即将删除当前选择节点以及【子节点】的数据，而且不能恢复。', '确认信息', {
+      this.$confirm('请注意：即将删除当前选择结点以及【子结点】的数据，而且不能恢复。', '确认信息', {
         distinguishCancelAndClose: true,
         confirmButtonText: '确定删除',
         cancelButtonText: '取消'
@@ -665,7 +665,7 @@ export default {
       this.getDataList()
     },
     doDelete() {
-      // 删除当前节点和子节点
+      // 删除当前结点和子结点
       deleteApi(this.dataJson.tempJson).then((_data) => {
         this.$notify({
           title: '新增处理成功',
@@ -991,13 +991,13 @@ export default {
     },
     /**
      * 拖拽结束后事件
-     * draggingNode:被拖拽节点对应的 Node
-     * dropNode:结束拖拽时最后进入的节点
-     * dropType:被拖拽节点的放置位置（before、after、inner）
+     * draggingNode:被拖拽结点对应的 Node
+     * dropNode:结束拖拽时最后进入的结点
+     * dropType:被拖拽结点的放置位置（before、after、inner）
      * ev:event
      */
     handleDrop(draggingNode, dropNode, dropType, ev) {
-      // 进入结点，作为子节点
+      // 进入结点，作为子结点
       if (dropType === 'inner') {
         // 获取老子的id
         const parent_id = dropNode.data.id
