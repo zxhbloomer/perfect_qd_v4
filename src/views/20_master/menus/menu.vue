@@ -25,6 +25,7 @@
       <el-button :disabled="!settings.btnShowStatus.showAddSubNode" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddSubNode">添加子菜单-结点</el-button>
       <el-button :disabled="!settings.btnShowStatus.showAddSubMenu" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddSubMenu">添加子菜单-页面</el-button>
       <el-button :disabled="!settings.btnShowStatus.showUpdate" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleUpdate">修改</el-button>
+      <el-button type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleSort">调整顺序</el-button>
       <el-button :disabled="!settings.btnShowStatus.showRealyDelete" type="primary" icon="el-icon-circle-close" :loading="settings.listLoading" @click="handleRealyDelete">物理删除</el-button>
     </el-button-group>
     <el-table
@@ -112,6 +113,14 @@
       @closeMeCancel="handleEditSubMenuDialogCloseMeCancel"
     />
 
+    <edit-sort-dialog
+      v-if="popSettings.four.visible"
+      :visible="popSettings.four.visible"
+      :dialog-status="popSettings.four.props.dialogStatus"
+      :data="popSettings.four.props.data"
+      @closeMeCancel="handleEditSortDialogCloseMeCancel"
+    />
+
     <iframe id="refIframe" ref="refIframe" scrolling="no" frameborder="0" style="display:none" name="refIframe">x</iframe>
   </div>
 </template>
@@ -157,11 +166,12 @@ import SelectDict from '@/components/00_dict/select/SelectDict'
 import editGroupDialog from '@/views/20_master/menus/dialog/editGroup'
 import editSubNodeDialog from '@/views/20_master/menus/dialog/editSubNode'
 import editSubMenuDialog from '@/views/20_master/menus/dialog/editSubMenu'
+import editSortDialog from '@/views/20_master/menus/dialog/editSort'
 import deepCopy from 'deep-copy'
 
 export default {
   name: constants_program.P_MENU, // 页面id，和router中的name需要一致，作为缓存
-  components: { SelectDict, editGroupDialog, editSubNodeDialog, editSubMenuDialog },
+  components: { SelectDict, editGroupDialog, editSubNodeDialog, editSubMenuDialog, editSortDialog },
   directives: { elDragDialog },
   mixins: [resizeMixin],
   props: {
@@ -242,6 +252,14 @@ export default {
           }
         },
         three: {
+          visible: false,
+          props: {
+            id: undefined,
+            data: {},
+            dialogStatus: ''
+          }
+        },
+        four: {
           visible: false,
           props: {
             id: undefined,
@@ -423,15 +441,6 @@ export default {
       this.dataJson.currentJson.index = this.getRowIndex(row)
       // 设置dialog的返回
       this.$store.dispatch('popUpSearchDialog/selectedDataJson', Object.assign({}, row))
-    },
-    handleSortChange(column) {
-      // 服务器端排序
-      if (column.order === 'ascending') {
-        this.dataJson.searchForm.pageCondition.sort = column.prop
-      } else if (column.order === 'descending') {
-        this.dataJson.searchForm.pageCondition.sort = '-' + column.prop
-      }
-      this.getDataList()
     },
     getDataList() {
       this.dataJson.searchForm.pageCondition.current = this.dataJson.paging.current
@@ -687,8 +696,18 @@ export default {
           duration: this.settings.duration
         })
       }
-    }
+    },
     // -----------------添加子菜单-页面 end------------------
+    // -----------------菜单排序 start------------------
+    handleSort() {
+      this.popSettings.four.props.data = this.dataJson.listData
+      this.popSettings.four.visible = true
+    },
+    handleEditSortDialogCloseMeCancel() {
+      this.popSettings.four.visible = false
+    }
+    // -----------------菜单排序 end------------------
+
   }
 }
 </script>

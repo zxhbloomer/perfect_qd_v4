@@ -83,3 +83,15 @@ export function realDeleteSelectionApi(data) {
     data
   })
 }
+
+/**
+ * 组织架构主表数据更新保存，拖拽后，全量更
+ * @param {*} data
+ */
+export function dragsaveApi(data) {
+  return request({
+    url: '/api/v1/menus/dragsave',
+    method: 'post',
+    data
+  })
+}
