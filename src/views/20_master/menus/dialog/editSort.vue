@@ -225,7 +225,6 @@
 import { dragsaveApi } from '@/api/20_master/menus/menu'
 import elDragDialog from '@/directive/el-drag-dialog'
 import { isNotEmpty } from '@/utils/index.js'
-import { getDataByIdApi } from '@/api/20_master/position/position'
 import constants_para from '@/common/constants/constants_para'
 
 export default {
@@ -245,7 +244,7 @@ export default {
       default: null
     },
     data: {
-      type: Object,
+      type: Array,
       default: null
     },
     dialogStatus: {
@@ -298,7 +297,6 @@ export default {
           update: '请选择要修改结点的类型',
           insert: '请选择添加下级结点类型'
         },
-        dialogFormVisible: false,
         btnDisabledStatus: {
           disabledOK: false
         },
@@ -343,91 +341,26 @@ export default {
     }
   },
   computed: {
+    // 是否为更新模式
+    isUpdateModel() {
+      if (this.settings.dialogStatus === this.PARAMETERS.STATUS_INSERT || this.settings.dialogStatus === this.PARAMETERS.STATUS_COPY_INSERT) {
+        return false
+      } else {
+        return true
+      }
+    },
+    listenVisible() {
+      return this.visible
+    },
+    isViewModel() {
+      if (this.settings.dialogStatus === this.PARAMETERS.STATUS_VIEW) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   watch: {
-    'dataJson.filterText': {
-      handler(newVal, oldVal) {
-        this.$refs.treeObject.filter(newVal)
-      }
-    },
-    'dataJson.currentJson': {
-      handler(newVal, oldVal) {
-        if (newVal !== null) {
-          // 判断是否是第一个结点：第一个结点是租户，所以不能删除，修改，只能新增
-          if (this.dataJson.currentJson.parent_id === null) {
-            this.settings.btnDisabledStatus.disabledInsert = false
-            this.settings.btnDisabledStatus.disabledUpdate = true
-            this.settings.btnDisabledStatus.disabledDelete = true
-          } else {
-            // 判断是否是岗位结点
-            if (this.dataJson.currentJson.type === this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION) {
-              this.settings.btnDisabledStatus.disabledInsert = false
-              this.settings.btnDisabledStatus.disabledUpdate = false
-              this.settings.btnDisabledStatus.disabledDelete = false
-            } else {
-              this.settings.btnDisabledStatus.disabledInsert = false
-              this.settings.btnDisabledStatus.disabledUpdate = false
-              this.settings.btnDisabledStatus.disabledDelete = false
-            }
-          }
-        } else {
-          this.settings.btnDisabledStatus.disabledInsert = true
-          this.settings.btnDisabledStatus.disabledUpdate = true
-          this.settings.btnDisabledStatus.disabledDelete = true
-        }
-      }
-    },
-    'popSettingsData.dialogFormVisible': {
-      handler(newVal, oldVal) {
-        if (newVal === true) {
-          const arr = []
-          // arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF)
-          switch (this.dataJson.currentJson.type) {
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT:
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF)
-              break
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT)
-              // arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF)
-              break
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY:
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF)
-              break
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT:
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY)
-              // arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF)
-              break
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION:
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT)
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION)
-              break
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF:
-              arr.push(this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT)
-              break
-          }
-          this.dataJson.tempJson.org_type = ''
-          this.settings.filterPara = arr
-          // 查询数据库，获取下拉选项
-          this.getCorrectTypeByInsertStatus(this.dataJson.currentJson.code, this.dataJson.currentJson.type, arr)
-        }
-      }
-    },
     'settings.listLoading': {
       handler(newVal, oldVal) {
         switch (newVal) {
@@ -444,29 +377,12 @@ export default {
   created() {
     // 初始化查询
     this.getDataList()
-    this.$on(this.EMITS.EMIT_ORG_LEFT, _data => {
-      this.handleRefresh()
-    })
   },
   mounted() {
-    this.initSearchButton()
-    // 和right开始绑定事件
-    // 描绘完成
-    this.$on(this.EMITS.EMIT_LOADING, _data => { this.settings.listLoading = true })
-    this.$on(this.EMITS.EMIT_LOADING_OK, _data => { this.settings.listLoading = false })
   },
   methods: {
-    // 选择or重置按钮的初始化
-    initSearchButton() {
-      this.$nextTick(() => {
-        this.$refs.buttonSearch.$el.parentElement.className = ' buttonSearch ' + this.$refs.buttonSearch.$el.parentElement.className
-      })
-    },
-    filterNode(value, data) {
-      if (!value) return true
-      return data.label.indexOf(value) !== -1
-    },
     getDataList() {
+      debugger
       // 查询逻辑
       this.settings.listLoading = true
       this.dataJson.treeData = this.data
@@ -490,81 +406,6 @@ export default {
           this.$refs.treeObject.filter(this.dataJson.filterText)
         })
       }
-    },
-    // 点击新增子结构按钮
-    handleInsert() {
-      // 新增
-      this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_INSERT
-      this.popSettingsData.dialogFormVisible = true
-    },
-    // 修改当前结点按钮
-    handleUpdate() {
-      // 修改
-      // this.popSettingsData.dialogStatus = this.PARAMETERS.STATUS_UPDATE
-      // this.popSettingsData.dialogFormVisible = true
-      switch (this.dataJson.currentJson.type) {
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
-          this.popSettingsData.searchDialogDataOne.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY:
-          this.popSettingsData.searchDialogDataTwo.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT:
-          this.popSettingsData.searchDialogDataThree.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION:
-          this.popSettingsData.searchDialogDataFour.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF:
-          break
-      }
-    },
-    handleRadioDictChange(val) {
-      this.dataJson.tempJson.org_type = val
-      this.doOk()
-    },
-    doOk() {
-      this.popSettingsData.dialogFormVisible = false
-      switch (this.dataJson.tempJson.org_type) {
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
-          this.popSettingsData.searchDialogDataOne.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY:
-          this.popSettingsData.searchDialogDataTwo.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT:
-          this.popSettingsData.searchDialogDataThree.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION:
-          this.popSettingsData.searchDialogDataFour.visible = true
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF:
-          getDataByIdApi({ id: this.dataJson.currentJson.serial_id }).then(response => {
-            this.popSettingsData.searchDialogDataFive.id = response.data.id
-            this.popSettingsData.searchDialogDataFive.data = response.data
-            this.popSettingsData.searchDialogDataFive.visible = true
-          }).finally(() => {
-          })
-          break
-      }
-    },
-    handleDelete() {
-      this.$confirm('请注意：即将删除当前选择结点以及【子结点】的数据，而且不能恢复。', '确认信息', {
-        distinguishCancelAndClose: true,
-        confirmButtonText: '确定删除',
-        cancelButtonText: '取消'
-      }).then(() => {
-        this.doDelete()
-      }).catch(action => {
-        // 右上角X
-        // if (action !== 'close') {
-        //   //
-        // }
-      })
-    },
-    handleRefresh() {
-      // 初始化查询
-      this.getDataList()
     },
     handleDragStart(node, ev) {
     },
@@ -616,7 +457,6 @@ export default {
         })
         // 查询
         this.getDataList()
-        this.popSettingsData.dialogFormVisible = false
         this.getDataList()
       }, (_error) => {
         this.$notify({
@@ -625,7 +465,6 @@ export default {
           type: 'error',
           duration: this.settings.duration
         })
-        // this.popSettingsData.dialogFormVisible = false
       }).finally(() => {
         this.settings.listLoading = false
       })
