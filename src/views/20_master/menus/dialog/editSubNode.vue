@@ -77,7 +77,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="菜单类型：" prop="type_name">
-              <el-input v-model.trim="dataJson.tempJson.meta_icon" clearable show-word-limit />
+              <el-input v-model.trim="dataJson.tempJson.type_name" disabled clearable show-word-limit />
             </el-form-item>
           </el-col>
         </el-row>

@@ -53,6 +53,7 @@
           {{ scope.row.name }}
         </template>
       </el-table-column>
+      <el-table-column header-align="center" show-overflow-tooltip min-width="60" prop="type_name" label="类型" />
       <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="full_path" label="请求地址" />
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="code" label="菜单编号" /> -->
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="80" prop="type_name" label="菜单类型" /> -->
@@ -277,7 +278,7 @@ export default {
               break
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
               // 页面
-              this.settings.btnShowStatus.showAddSubNode = true
+              this.settings.btnShowStatus.showAddSubNode = false
               this.settings.btnShowStatus.showAddSubMenu = false
               this.settings.btnShowStatus.showUpdate = true
               this.settings.btnShowStatus.showRealyDelete = true
