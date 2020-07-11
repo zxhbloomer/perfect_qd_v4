@@ -6,14 +6,14 @@
       v-loading="settings.loading"
       element-loading-text="拼命加载中，请稍后..."
       element-loading-background="rgba(255, 255, 255, 0.7)"
-      :title="settings.textMap[settings.dialogStatus]"
+      :title="settings.textMap"
       :visible="visible"
       :close-on-click-modal="PARAMETERS.DIALOG_CLOSE_BY_CLICK"
       :close-on-press-escape="PARAMETERS.DIALOG_CLOSE_BY_ESC"
       :show-close="PARAMETERS.DIALOG_SHOW_CLOSE"
       :append-to-body="true"
       :modal-append-to-body="true"
-      width="900px"
+      width="700px"
       destroy-on-close
     >
       <div :style="{height: height + 'px'}" style="overflow-y:auto;overflow-x:auto;" class="mytree">
@@ -21,7 +21,6 @@
           ref="treeObject"
           :data="dataJson.treeData"
           :props="dataJson.defaultProps"
-          :filter-node-method="filterNode"
           :expand-on-click-node="false"
           :indent="0"
           highlight-current
@@ -278,7 +277,9 @@ export default {
       settings: {
         para: this.CONSTANTS.DICT_ORG_SETTING_TYPE,
         filterPara: [],
-        listLoading: true,
+        loading: true,
+        // 弹出窗口状态名称
+        dialogStatus: '',
         // 按钮状态：是否可用
         btnDisabledStatus: {
           disabledInsert: true,
@@ -288,55 +289,8 @@ export default {
         defaultProps: {
           children: 'children',
           label: 'label'
-        }
-      },
-      popSettingsData: {
-        // 弹出窗口状态名称
-        dialogStatus: '',
-        textMap: {
-          update: '请选择要修改结点的类型',
-          insert: '请选择添加下级结点类型'
         },
-        btnDisabledStatus: {
-          disabledOK: false
-        },
-        // 弹出的查询框参数设置
-        searchDialogDataOne: {
-          // 弹出框显示参数
-          visible: false,
-          // 点击确定以后返回的值
-          selectedDataJson: {}
-        },
-        // 弹出的查询框参数设置
-        searchDialogDataTwo: {
-          // 弹出框显示参数
-          visible: false,
-          // 点击确定以后返回的值
-          selectedDataJson: {}
-        },
-        // 弹出的查询框参数设置
-        searchDialogDataThree: {
-          // 弹出框显示参数
-          visible: false,
-          // 点击确定以后返回的值
-          selectedDataJson: {}
-        },
-        // 弹出的查询框参数设置
-        searchDialogDataFour: {
-          // 弹出框显示参数
-          visible: false,
-          // 点击确定以后返回的值
-          selectedDataJson: {}
-        },
-        // 弹出的查询框参数设置
-        searchDialogDataFive: {
-          id: undefined,
-          data: null,
-          // 弹出框显示参数
-          visible: false,
-          // 点击确定以后返回的值
-          selectedDataJson: {}
-        }
+        textMap: '拖动结点调整顺序'
       }
     }
   },
@@ -361,7 +315,7 @@ export default {
     }
   },
   watch: {
-    'settings.listLoading': {
+    'settings.loading': {
       handler(newVal, oldVal) {
         switch (newVal) {
           case true:
@@ -382,11 +336,10 @@ export default {
   },
   methods: {
     getDataList() {
-      debugger
       // 查询逻辑
-      this.settings.listLoading = true
+      this.settings.loading = true
       this.dataJson.treeData = this.data
-      this.settings.listLoading = false
+      this.settings.loading = false
     },
     handleCurrentChange(row) {
       this.dataJson.currentJson = Object.assign({}, row) // copy obj
@@ -447,7 +400,7 @@ export default {
       this.doDragSave()
     },
     doDragSave() {
-      this.settings.listLoading = true
+      this.settings.loading = true
       dragsaveApi(this.dataJson.treeData).then((_data) => {
         this.$notify({
           title: '更新处理成功',
@@ -466,7 +419,7 @@ export default {
           duration: this.settings.duration
         })
       }).finally(() => {
-        this.settings.listLoading = false
+        this.settings.loading = false
       })
     },
     allowDrop(draggingNode, dropNode, type) {
