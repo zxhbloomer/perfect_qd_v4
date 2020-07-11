@@ -40,7 +40,7 @@
         >
           <span slot-scope="{ node, data }" class="custom-tree-node">
             <span>
-              <svg-icon :icon-class="data.meta_icon" class="el-icon--right" />
+              <svg-icon v-if="data.meta_icon" :icon-class="data.meta_icon" class="el-icon--right" />
               {{ data.label }}
             </span>
             <span>[{{ data.type_name }}]</span>

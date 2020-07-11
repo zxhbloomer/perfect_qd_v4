@@ -118,6 +118,7 @@
       :visible="popSettings.four.visible"
       :dialog-status="popSettings.four.props.dialogStatus"
       :data="popSettings.four.props.data"
+      :height="setUIheight()-200"
       @closeMeCancel="handleEditSortDialogCloseMeCancel"
     />
 
