@@ -189,13 +189,6 @@
     margin-left: 0px;
   }
 
-  // .el-tree-node:after {
-  //   border-top: 1px solid #4386c6;
-  //   height: 20px;
-  //   top: 12px;
-  //   width: 8px;
-  // }
-
   .el-tree>.el-tree-node{
     min-width:100%;
     display: inline-block ;
@@ -238,7 +231,7 @@ export default {
       type: Number,
       default: null
     },
-    data: {
+    sortData: {
       type: Array,
       default: null
     },
@@ -316,7 +309,7 @@ export default {
     getDataList() {
       // 查询逻辑
       this.settings.loading = true
-      this.dataJson.treeData = this.data
+      this.dataJson.treeData = this.sortData
       this.settings.loading = false
     },
     handleCurrentChange(row) {
