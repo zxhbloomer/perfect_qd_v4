@@ -406,62 +406,33 @@ export default {
         return false
       }
       switch (draggingNode.data.type) {
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
-          // 集团可嵌套，必须在租户下
-          switch (dropNode.data.type) {
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
-              return true
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT:
-              return true
-          }
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY:
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
+          // 根结点
+          return false
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
           // 企业必须在集团下
           switch (dropNode.data.type) {
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
               if (dropNode.data.code.length <= 8 && type === 'prev') {
                 return false
               }
               return true
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY:
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
               if (type === 'inner') {
                 return false
               }
               return true
           }
           break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT:
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
           switch (dropNode.data.type) {
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
               return false
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY:
-              if (type === 'inner') {
-                return true
-              }
-              break
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT:
-              return true
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
+              return false
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
+              return false
           }
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION:
-          switch (dropNode.data.type) {
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_GROUP:
-              return false
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_COMPANY:
-              return false
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_DEPT:
-              if (type === 'inner') {
-                return true
-              }
-              break
-            case this.CONSTANTS.DICT_ORG_SETTING_TYPE_POSITION:
-              if (type !== 'inner') {
-                return true
-              }
-              break
-          }
-          break
-        case this.CONSTANTS.DICT_ORG_SETTING_TYPE_STAFF:
           break
       }
       return false
