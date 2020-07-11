@@ -40,14 +40,10 @@
         >
           <span slot-scope="{ node, data }" class="custom-tree-node">
             <span>
-              <svg-icon v-if="data.type === '10'" icon-class="perfect-icon-tenant" class="el-icon--right" />
-              <svg-icon v-else-if="data.type === '20'" icon-class="perfect-icon-group" class="el-icon--right" />
-              <svg-icon v-else-if="data.type === '30'" icon-class="perfect-icon-company" class="el-icon--right" />
-              <svg-icon v-else-if="data.type === '40'" icon-class="perfect-icon-dept" class="el-icon--right" />
-              <svg-icon v-else-if="data.type === '50'" icon-class="perfect-icon-position" class="el-icon--right" />
-              {{ data.simple_name }}
+              <svg-icon :icon-class="data.meta_icon" class="el-icon--right" />
+              {{ data.label }}
             </span>
-            <span>[{{ data.type_text }}]</span>
+            <span>[{{ data.type_name }}]</span>
           </span>
         </el-tree>
       </div>
@@ -258,10 +254,6 @@ export default {
         unwatch_tempJson: null
       },
       dataJson: {
-        // 查询使用的json
-        searchForm: {
-          type: this.CONSTANTS.DICT_ORG_SETTING_TYPE_TENANT
-        },
         // 下拉选项json
         selectOptions: [],
         filterText: '',
@@ -296,22 +288,8 @@ export default {
   },
   computed: {
     // 是否为更新模式
-    isUpdateModel() {
-      if (this.settings.dialogStatus === this.PARAMETERS.STATUS_INSERT || this.settings.dialogStatus === this.PARAMETERS.STATUS_COPY_INSERT) {
-        return false
-      } else {
-        return true
-      }
-    },
     listenVisible() {
       return this.visible
-    },
-    isViewModel() {
-      if (this.settings.dialogStatus === this.PARAMETERS.STATUS_VIEW) {
-        return true
-      } else {
-        return false
-      }
     }
   },
   watch: {
