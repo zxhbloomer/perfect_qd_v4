@@ -986,6 +986,9 @@ export default {
     handleDragLeave(draggingNode, dropNode, ev) {
     },
     handleDragOver(draggingNode, dropNode, ev) {
+      const xx = document.querySelector('.el-tree__drop-indicator')
+      console.log(xx)
+      debugger
     },
     handleDragEnd(draggingNode, dropNode, dropType, ev) {
     },
