@@ -122,7 +122,14 @@
       @closeMeCancel="handleEditSortDialogCloseMeCancel"
     />
 
-    <iframe id="refIframe" ref="refIframe" scrolling="no" frameborder="0" style="display:none" name="refIframe">x</iframe>
+    <select-root-node-dialog
+      v-if="popSettings.five.visible"
+      :visible="popSettings.five.visible"
+      :dialog-status="popSettings.five.props.dialogStatus"
+      :data="popSettings.five.props.data"
+      @closeMeOk="handleSelectRootNodeDialogCloseMeOk"
+      @closeMeCancel="handleSelectRootNodeDialogCloseMeCancel"
+    />
   </div>
 </template>
 
@@ -168,11 +175,12 @@ import editGroupDialog from '@/views/20_master/menus/dialog/editGroup'
 import editSubNodeDialog from '@/views/20_master/menus/dialog/editSubNode'
 import editSubMenuDialog from '@/views/20_master/menus/dialog/editSubMenu'
 import editSortDialog from '@/views/20_master/menus/dialog/editSort'
+import selectRootNodeDialog from '@/views/20_master/menus/dialog/selectRootNode'
 import deepCopy from 'deep-copy'
 
 export default {
   name: constants_program.P_MENU, // 页面id，和router中的name需要一致，作为缓存
-  components: { SelectDict, editGroupDialog, editSubNodeDialog, editSubMenuDialog, editSortDialog },
+  components: { SelectDict, editGroupDialog, editSubNodeDialog, editSubMenuDialog, editSortDialog, selectRootNodeDialog },
   directives: { elDragDialog },
   mixins: [resizeMixin],
   props: {
@@ -261,6 +269,14 @@ export default {
           }
         },
         four: {
+          visible: false,
+          props: {
+            id: undefined,
+            data: {},
+            dialogStatus: ''
+          }
+        },
+        five: {
           visible: false,
           props: {
             id: undefined,
@@ -701,14 +717,26 @@ export default {
     },
     // -----------------添加子菜单-页面 end------------------
     // -----------------菜单排序 start------------------
-    handleSort() {
-      this.popSettings.four.props.data = this.dataJson.listData
-      this.popSettings.four.visible = true
-    },
     handleEditSortDialogCloseMeCancel() {
       this.popSettings.four.visible = false
-    }
+    },
     // -----------------菜单排序 end------------------
+    // -----------------选择根目录 start------------------
+    handleSort() {
+      this.popSettings.five.props.data = this.dataJson.listData
+      this.popSettings.five.visible = true
+    },
+    handleSelectRootNodeDialogCloseMeOk(val) {
+      this.popSettings.five.visible = false
+      // 打开菜单排序 dialog
+      const _data = [val]
+      this.popSettings.four.props.data = _data
+      this.popSettings.four.visible = true
+    },
+    handleSelectRootNodeDialogCloseMeCancel() {
+      this.popSettings.five.visible = false
+    }
+    // -----------------选择根目录 end------------------
 
   }
 }
