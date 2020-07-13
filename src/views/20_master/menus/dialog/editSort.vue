@@ -214,6 +214,7 @@ import { dragsaveApi } from '@/api/20_master/menus/menu'
 import elDragDialog from '@/directive/el-drag-dialog'
 import { isNotEmpty } from '@/utils/index.js'
 import constants_para from '@/common/constants/constants_para'
+import deepCopy from 'deep-copy'
 
 export default {
   components: { },
@@ -332,6 +333,13 @@ export default {
       }
     },
     handleDragStart(node, ev) {
+      const _data = deepCopy(node.data)
+      this.dataJson.currentJson = _data
+      this.dataJson.tempJsonOriginal = _data
+      this.dataJson.tempJson = _data
+      this.dataJson.currentJson = _data
+      this.dataJson.currentJson.currentkey = node.data.id
+      node.isCurrent = true
     },
     handleDragEnter(draggingNode, dropNode, ev) {
     },
