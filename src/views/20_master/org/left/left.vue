@@ -242,7 +242,9 @@
     // assets使用方法
     border-image: url('~@/assets/images/hyphen.png') 1 fill  stretch;
   }
-  .el-tree-node__expand-icon.is-leaf.el-icon-caret-right:before{content:""}
+  .el-tree-node__expand-icon.is-leaf.el-icon-caret-right:before {
+    content:""
+  }
   .el-tree-node__children {
     padding-left: 20px;
   }
@@ -993,8 +995,6 @@ export default {
     handleDragLeave(draggingNode, dropNode, ev) {
     },
     handleDragOver(draggingNode, dropNode, ev) {
-      const xx = document.querySelector('.el-tree__drop-indicator')
-      console.log(xx)
     },
     handleDragEnd(draggingNode, dropNode, dropType, ev) {
     },
