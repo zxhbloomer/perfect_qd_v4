@@ -312,6 +312,8 @@ export default {
       this.dataJson.tempJson.route_name = ''
       this.dataJson.tempJson.component = ''
       this.dataJson.tempJson.name = ''
+      this.dataJson.tempJson.type_name = '结点'
+      this.dataJson.tempJson.type = this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE
 
       // 设置按钮
       this.settings.btnShowStatus.showInsert = true

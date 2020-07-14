@@ -410,42 +410,31 @@ export default {
       })
     },
     allowDrop(draggingNode, dropNode, type) {
-      // if (type !== 'inner') {
-      //   return false
-      // }
-      // 不得放到根目录之前
-      if (!isNotEmpty(dropNode.data.parent_id)) {
-        return false
-      }
       // 不得放到根目录之后，平级
-      if (!isNotEmpty(dropNode.data.parent_id)) {
-        return false
-      }
       switch (draggingNode.data.type) {
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
           // 根结点
           return false
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
-          // 企业必须在集团下
           switch (dropNode.data.type) {
-            case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
-              if (dropNode.data.code.length <= 8 && type === 'prev') {
-                return false
-              }
-              return true
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
               if (type === 'inner') {
+                return true
+              } else {
                 return false
               }
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
               return true
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
+              return false
           }
           break
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
           switch (dropNode.data.type) {
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
-              return false
+              return true
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
-              return false
+              return true
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
               return false
           }
