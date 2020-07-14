@@ -231,13 +231,18 @@
   //结点有间隙，隐藏掉展开按钮就好了,如果觉得空隙没事可以删掉
   .el-tree-node__expand-icon.is-leaf{
     // display: none;
-    color: transparent;
-    border-top: 1px solid #4386c6;
-    height: 3px;
-    top: 12px;
-    width: 8px;
-    margin-right: 8px;
+    // color: transparent;
+    border-left:5px solid  ;
+    border-top:5px solid  ;
+    border-bottom:5px solid  ;
+    // height: 10px;
+    // top: 12px;
+    // width: 8px;
+    // margin-right: 8px;
+    // assets使用方法
+    border-image: url('~@/assets/images/hyphen.png') 1 fill  stretch;
   }
+  .el-tree-node__expand-icon.is-leaf.el-icon-caret-right:before{content:""}
   .el-tree-node__children {
     padding-left: 20px;
   }
@@ -294,7 +299,9 @@
   }
 
   .el-tree-node__content>.el-tree-node__expand-icon {
-    padding: 2px
+    // padding: 2px
+    padding-left: 2px;
+    padding-right: 2px;
   }
 }
 
@@ -988,7 +995,6 @@ export default {
     handleDragOver(draggingNode, dropNode, ev) {
       const xx = document.querySelector('.el-tree__drop-indicator')
       console.log(xx)
-      debugger
     },
     handleDragEnd(draggingNode, dropNode, dropType, ev) {
     },
