@@ -105,6 +105,22 @@
   }
 
   // 拖拽css before after
+  .el-tree__drop-indicator::before {
+    content:"";
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    left:-6px;
+    margin-top: -2px;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    border-color: #409eff;
+    -webkit-transform-origin: 75% 25%;
+    -webkit-transform: rotateZ(45deg);
+    -webkit-transition: 100ms ease-in .1s;
+    transition: 100ms ease-in .1s;
+  }
   .el-tree__drop-indicator {
     position: absolute;
     left: 0;
@@ -112,6 +128,22 @@
     height: 2px;
     margin-bottom: 10px;
     background-color: #409eff
+  }
+  .el-tree__drop-indicator::after {
+    content:"";
+    position: absolute;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    right: -4px;
+    margin-top: -2px;
+    border-style: solid;
+    border-width: 2px 2px 0 0;
+    border-color: #409eff;
+    -webkit-transform-origin: 75% 25%;
+    -webkit-transform: rotateZ(-135deg);
+    -webkit-transition: 100ms ease-in .1s;
+    transition: 100ms ease-in .1s;
   }
 
   .mytree ::v-deep{
