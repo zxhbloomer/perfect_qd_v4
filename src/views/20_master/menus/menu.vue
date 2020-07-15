@@ -167,7 +167,7 @@
 
 <script>
 import constants_program from '@/common/constants/constants_program'
-import { getListApi, deleteApi, realDeleteSelectionApi } from '@/api/20_master/menus/menu'
+import { getListApi, realDeleteSelectionApi } from '@/api/20_master/menus/menu'
 import resizeMixin from './menuResizeHandlerMixin'
 import elDragDialog from '@/directive/el-drag-dialog'
 import SelectDict from '@/components/00_dict/select/SelectDict'
@@ -365,47 +365,6 @@ export default {
     },
     handleRowUpdate(row, _rowIndex) {
       this.dataJson.rowIndex = _rowIndex
-    },
-    // 删除操作
-    handleDel(row) {
-      let _message = ''
-      const _value = row.is_del
-      const selectionJson = []
-      selectionJson.push({ 'id': row.id })
-      if (_value === true) {
-        _message = '是否要删除选择的数据？'
-      } else {
-        _message = '是否要复原该条数据？'
-      }
-      // 选择全部的时候
-      this.$confirm(_message, '确认信息', {
-        distinguishCancelAndClose: true,
-        confirmButtonText: '确认',
-        cancelButtonText: '取消'
-      }).then(() => {
-        // loading
-        this.settings.listLoading = true
-        deleteApi(selectionJson).then((_data) => {
-          this.$notify({
-            title: '更新处理成功',
-            message: _data.message,
-            type: 'success',
-            duration: this.settings.duration
-          })
-        }, (_error) => {
-          this.$notify({
-            title: '更新处理失败',
-            message: _error.message,
-            type: 'error',
-            duration: this.settings.duration
-          })
-          row.is_del = !row.is_del
-        }).finally(() => {
-          this.settings.listLoading = false
-        })
-      }).catch(action => {
-        row.is_del = !row.is_del
-      })
     },
     // 点击按钮 新增
     handleInsert() {

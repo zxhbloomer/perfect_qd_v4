@@ -293,7 +293,7 @@
   }
 </style>
 <script>
-import { getCascaderListApi, getListApi, updateApi, insertApi, exportAllApi, exportSelectionApi, deleteApi } from '@/api/10_system/tenant/tenant'
+import { getCascaderListApi, getListApi, updateApi, insertApi, exportAllApi, exportSelectionApi } from '@/api/10_system/tenant/tenant'
 import Pagination from '@/components/Pagination'
 import elDragDialog from '@/directive/el-drag-dialog'
 import deepCopy from 'deep-copy'
@@ -567,49 +567,49 @@ export default {
       this.dataJson.multipleSelection = []
       this.$refs.multipleTable.clearSelection()
     },
-    // 删除操作
-    handleDel(row) {
-      let _message = ''
-      const _value = row.isdel
-      const selectionJson = []
-      selectionJson.push({ 'id': row.id })
-      if (_value === true) {
-        _message = '是否要删除选择的数据？'
-      } else {
-        _message = '是否要复原该条数据？'
-      }
-      // 选择全部的时候
-      this.$confirm(_message, '确认信息', {
-        distinguishCancelAndClose: true,
-        confirmButtonText: '确认',
-        cancelButtonText: '取消'
-      }).then(() => {
-        // loading
-        this.settings.listLoading = true
-        deleteApi(selectionJson).then((_data) => {
-          this.$notify({
-            title: '更新处理成功',
-            message: _data.message,
-            type: 'success',
-            duration: this.settings.duration
-          })
-          this.popSettingsData.dialogFormVisible = false
-        }, (_error) => {
-          this.$notify({
-            title: '更新处理失败',
-            message: _error.message,
-            type: 'error',
-            duration: this.settings.duration
-          })
-          row.is_del = !row.is_del
-          // this.popSettingsData.dialogFormVisible = false
-        }).finally(() => {
-          this.settings.listLoading = false
-        })
-      }).catch(action => {
-        row.isdel = !row.isdel
-      })
-    },
+    // // 删除操作
+    // handleDel(row) {
+    //   let _message = ''
+    //   const _value = row.isdel
+    //   const selectionJson = []
+    //   selectionJson.push({ 'id': row.id })
+    //   if (_value === true) {
+    //     _message = '是否要删除选择的数据？'
+    //   } else {
+    //     _message = '是否要复原该条数据？'
+    //   }
+    //   // 选择全部的时候
+    //   this.$confirm(_message, '确认信息', {
+    //     distinguishCancelAndClose: true,
+    //     confirmButtonText: '确认',
+    //     cancelButtonText: '取消'
+    //   }).then(() => {
+    //     // loading
+    //     this.settings.listLoading = true
+    //     deleteApi(selectionJson).then((_data) => {
+    //       this.$notify({
+    //         title: '更新处理成功',
+    //         message: _data.message,
+    //         type: 'success',
+    //         duration: this.settings.duration
+    //       })
+    //       this.popSettingsData.dialogFormVisible = false
+    //     }, (_error) => {
+    //       this.$notify({
+    //         title: '更新处理失败',
+    //         message: _error.message,
+    //         type: 'error',
+    //         duration: this.settings.duration
+    //       })
+    //       row.is_del = !row.is_del
+    //       // this.popSettingsData.dialogFormVisible = false
+    //     }).finally(() => {
+    //       this.settings.listLoading = false
+    //     })
+    //   }).catch(action => {
+    //     row.isdel = !row.isdel
+    //   })
+    // },
     // 点击按钮 新增
     handleInsert() {
       // 新增
