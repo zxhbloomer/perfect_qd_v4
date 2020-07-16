@@ -4,7 +4,7 @@
 
     <!-- 面包屑 -->
     <!-- <breadcrumb id="breadcrumb-container" class="breadcrumb-container" /> -->
-
+    <top-nav />
     <div class="right-menu">
       <template v-if="device!=='mobile'">
         <search id="header-search" class="right-menu-item" />
@@ -48,6 +48,7 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
+import topNav from '@/layout/components/TopNav'
 
 export default {
   components: {
@@ -56,7 +57,8 @@ export default {
     ErrorLog,
     Screenfull,
     SizeSelect,
-    Search
+    Search,
+    topNav
   },
   computed: {
     ...mapGetters([
