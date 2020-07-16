@@ -38,14 +38,22 @@ export function filterAsyncRoutes(routes, roles) {
 }
 
 const state = {
+  // 顶部导航栏
+  topNav: [],
+  // 当前激活的菜单
   routes: [],
   addRoutes: []
 }
 
 const mutations = {
+  // 添加当前路由
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
+  },
+  // 添加顶部导航栏
+  SET_TOP_NAV: (state, topNav) => {
+    state.topNav = topNav
   }
 }
 
@@ -73,6 +81,58 @@ const actions = {
       commit('SET_ROUTES', accessedRoutes)
       // 返回的是一级路由，设置到router中
       resolve(ar)
+    })
+  },
+  // 获取路由
+  getTopNavAndRoutes({ commit }, roles) {
+    return new Promise(resolve => {
+      // TODO 此处修改，调试顶部导航栏
+      const _topNav = [
+        {
+          index: 1,
+          type: 'T',
+          meta: {
+            icon: '系统管理',
+            name: '工作台'
+          },
+          menus: null,
+          routers: asyncRoutes
+        },
+        {
+          index: 2,
+          type: 'T',
+          meta: {
+            icon: 'syscode',
+            name: '业务管理'
+          },
+          menus: null,
+          routers: asyncRoutes
+        },
+        {
+          index: 3,
+          type: 'T',
+          meta: {
+            icon: 'syscode',
+            name: '业务管理a'
+          },
+          menus: null,
+          routers: asyncRoutes
+        }
+      ]
+
+      // 循环格式化菜单
+      for (const item of _topNav) {
+        if (item.type === 'T') {
+          var _routers = deepcopy(item.routers)
+          const convertData = convertToOneRouter(_routers)
+          item.menus = convertData
+        }
+      }
+      // 设置到vuex中是菜单树
+      commit('SET_TOP_NAV', _topNav)
+      commit('SET_ROUTES', _topNav[0].routers)
+      // 返回的是一级路由，设置到router中
+      resolve(_topNav[0].menus)
     })
   }
 }

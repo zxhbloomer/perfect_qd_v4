@@ -11,6 +11,8 @@ const getters = {
   roles: state => state.user.roles,
   // 菜单router
   permission_routes: state => state.permission.routes,
+  // 顶部导航栏
+  permission_topNav: state => state.permission.topNav,
   errorLogs: state => state.errorLog.logs,
   /** add by zxh */
   program: state => state.popUpSearchDialog.program,
