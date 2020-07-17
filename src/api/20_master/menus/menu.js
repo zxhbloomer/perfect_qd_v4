@@ -52,6 +52,18 @@ export function addMenuGroupApi(data) {
  * 新增子结点
  * @param {*} data
  */
+export function addTopNavApi(data) {
+  return request({
+    url: '/api/v1/menus/addtopnav',
+    method: 'post',
+    data
+  })
+}
+
+/**
+ * 新增子结点
+ * @param {*} data
+ */
 export function addSubNodeApi(data) {
   return request({
     url: '/api/v1/menus/addsubnode',

@@ -22,6 +22,7 @@
     </el-form>
     <el-button-group v-show="!meDialogStatus.dialogStatus">
       <el-button type="primary" icon="el-icon-circle-plus-outline" :loading="settings.listLoading" @click="handleInsert">新增菜单组</el-button>
+      <el-button :disabled="!settings.btnShowStatus.showAddTopNav" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddTopNav">添加顶部导航栏</el-button>
       <el-button :disabled="!settings.btnShowStatus.showAddSubNode" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddSubNode">添加子菜单-结点</el-button>
       <el-button :disabled="!settings.btnShowStatus.showAddSubMenu" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleAddSubMenu">添加子菜单-页面</el-button>
       <el-button :disabled="!settings.btnShowStatus.showUpdate" type="primary" icon="el-icon-edit-outline" :loading="settings.listLoading" @click="handleUpdate">修改</el-button>
@@ -91,6 +92,16 @@
       :data="popSettings.one.props.data"
       @closeMeOk="handleEditGroupDialogCloseMeOk"
       @closeMeCancel="handleEditGroupDialogCloseMeCancel"
+    />
+
+    <!-- 顶部导航栏 dialog editTopNavDialog-->
+    <edit-top-nav-dialog
+      v-if="popSettings.six.visible"
+      :visible="popSettings.six.visible"
+      :dialog-status="popSettings.six.props.dialogStatus"
+      :data="popSettings.six.props.data"
+      @closeMeOk="handleEditTopNavDialogCloseMeOk"
+      @closeMeCancel="handleEditTopNavDialogCloseMeCancel"
     />
 
     <!-- 添加子菜单-结点 dialog editSubNodeDialog-->
@@ -172,6 +183,7 @@ import resizeMixin from './menuResizeHandlerMixin'
 import elDragDialog from '@/directive/el-drag-dialog'
 import SelectDict from '@/components/00_dict/select/SelectDict'
 import editGroupDialog from '@/views/20_master/menus/dialog/editGroup'
+import editTopNavDialog from '@/views/20_master/menus/dialog/editTopNav'
 import editSubNodeDialog from '@/views/20_master/menus/dialog/editSubNode'
 import editSubMenuDialog from '@/views/20_master/menus/dialog/editSubMenu'
 import editSortDialog from '@/views/20_master/menus/dialog/editSort'
@@ -180,7 +192,13 @@ import deepCopy from 'deep-copy'
 
 export default {
   name: constants_program.P_MENU, // 页面id，和router中的name需要一致，作为缓存
-  components: { SelectDict, editGroupDialog, editSubNodeDialog, editSubMenuDialog, editSortDialog, selectRootNodeDialog },
+  components: { SelectDict,
+    editGroupDialog,
+    editTopNavDialog,
+    editSubNodeDialog,
+    editSubMenuDialog,
+    editSortDialog,
+    selectRootNodeDialog },
   directives: { elDragDialog },
   mixins: [resizeMixin],
   props: {
@@ -232,6 +250,7 @@ export default {
         // 按钮状态
         btnShowStatus: {
           showUpdate: false,
+          showAddTopNav: false,
           // 添加子菜单-结点：按钮
           showAddSubNode: false,
           showAddSubMenu: false,
@@ -283,6 +302,14 @@ export default {
             data: {},
             dialogStatus: ''
           }
+        },
+        six: {
+          visible: false,
+          props: {
+            id: undefined,
+            data: {},
+            dialogStatus: ''
+          }
         }
       }
     }
@@ -299,6 +326,15 @@ export default {
           switch (this.dataJson.currentJson.type) {
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
               // 根结点
+              this.settings.btnShowStatus.showAddTopNav = true
+              this.settings.btnShowStatus.showAddSubNode = false
+              this.settings.btnShowStatus.showAddSubMenu = false
+              this.settings.btnShowStatus.showUpdate = false
+              this.settings.btnShowStatus.showRealyDelete = false
+              break
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
+              // 顶部导航栏
+              this.settings.btnShowStatus.showAddTopNav = false
               this.settings.btnShowStatus.showAddSubNode = true
               this.settings.btnShowStatus.showAddSubMenu = true
               this.settings.btnShowStatus.showUpdate = true
@@ -306,6 +342,7 @@ export default {
               break
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
               // 结点
+              this.settings.btnShowStatus.showAddTopNav = false
               this.settings.btnShowStatus.showAddSubNode = true
               this.settings.btnShowStatus.showAddSubMenu = true
               this.settings.btnShowStatus.showUpdate = true
@@ -313,6 +350,7 @@ export default {
               break
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
               // 页面
+              this.settings.btnShowStatus.showAddTopNav = false
               this.settings.btnShowStatus.showAddSubNode = false
               this.settings.btnShowStatus.showAddSubMenu = false
               this.settings.btnShowStatus.showUpdate = true
@@ -320,7 +358,7 @@ export default {
               break
           }
         } else {
-          // this.settings.btnShowStatus.doInsert = false
+          this.settings.btnShowStatus.showAddTopNav = false
           this.settings.btnShowStatus.showAddSubNode = false
           this.settings.btnShowStatus.showAddSubMenu = false
           this.settings.btnShowStatus.showUpdate = false
@@ -399,6 +437,12 @@ export default {
           this.popSettings.three.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
           break
       }
+    },
+    // 点击按钮 添加顶部导航栏
+    handleAddTopNav() {
+      this.popSettings.six.props.dialogStatus = this.PARAMETERS.STATUS_INSERT
+      this.popSettings.six.props.data = deepCopy(this.dataJson.currentJson)
+      this.popSettings.six.visible = true
     },
     // 点击按钮 添加子菜单-结点
     handleAddSubNode() {
@@ -561,6 +605,63 @@ export default {
       }
     },
     // -----------------新增菜单组 end------------------
+    // -----------------添加顶部导航栏 start------------------
+    handleEditTopNavDialogCloseMeOk(val) {
+      switch (this.popSettings.six.props.dialogStatus) {
+        case this.PARAMETERS.STATUS_INSERT:
+          this.doInsertTopNavCallBack(val)
+          break
+        case this.PARAMETERS.STATUS_UPDATE:
+          this.doUpdateTopNavCallBack(val)
+          break
+      }
+    },
+    handleEditTopNavDialogCloseMeCancel() {
+      this.popSettings.six.visible = false
+    },
+    // 处理插入回调
+    doInsertTopNavCallBack(val) {
+      if (val.return_flag) {
+        this.popSettings.six.visible = false
+        this.getDataList()
+        this.$notify({
+          title: '添加顶部导航栏处理成功',
+          message: val.data.message,
+          type: 'success',
+          duration: this.settings.duration
+        })
+      } else {
+        this.$notify({
+          title: '添加顶部导航栏处理失败',
+          message: val.error.message,
+          type: 'error',
+          duration: this.settings.duration
+        })
+      }
+    },
+    // 处理更新回调
+    doUpdateTopNavCallBack(val) {
+      if (val.return_flag) {
+        this.popSettings.six.visible = false
+        // 设置到currentjson中
+        this.dataJson.currentJson = deepCopy(val.data.data)
+        this.getDataList()
+        this.$notify({
+          title: '更新处理成功',
+          message: val.data.message,
+          type: 'success',
+          duration: this.settings.duration
+        })
+      } else {
+        this.$notify({
+          title: '更新处理失败',
+          message: val.error.message,
+          type: 'error',
+          duration: this.settings.duration
+        })
+      }
+    },
+    // -----------------添加顶部导航栏 end------------------
     // -----------------添加子菜单-结点 start------------------
     handleEditSubNodeDialogCloseMeOk(val) {
       switch (this.popSettings.two.props.dialogStatus) {

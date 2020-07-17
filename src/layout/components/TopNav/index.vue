@@ -9,7 +9,7 @@
       >
         <el-menu-item v-for="(item,index) in permission_topNav" :key="index" :index="item.index">
           <svg-icon :icon-class="item.meta.icon" />
-          <span slot="title" style="margin-left: 5px">{{ item.meta.name }}</span>
+          <span slot="title" style="margin-left: 8px">{{ item.meta.name }}</span>
         </el-menu-item>
       </el-menu>
     </template>

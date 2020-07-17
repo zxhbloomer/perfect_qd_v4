@@ -64,6 +64,8 @@ const DICT_ORG_USED_TYPE_SHOW_ALL = null
 const DICT_SYS_MENU_TYPE = 'sys_menu_type'
 /** 根结点  */
 const DICT_SYS_MENU_TYPE_ROOT = 'R'
+/** 顶部导航栏  */
+const DICT_SYS_MENU_TYPE_TOPNAV = 'T'
 /** 结点  */
 const DICT_SYS_MENU_TYPE_NODE = 'N'
 /** 页面  */
@@ -126,6 +128,8 @@ export default {
   DICT_SYS_MENU_TYPE,
   /** 根结点  */
   DICT_SYS_MENU_TYPE_ROOT,
+  /** 顶部导航栏  */
+  DICT_SYS_MENU_TYPE_TOPNAV,
   /** 结点  */
   DICT_SYS_MENU_TYPE_NODE,
   /** 页面  */
