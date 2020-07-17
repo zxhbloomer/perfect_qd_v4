@@ -399,7 +399,6 @@ export default {
       // 清空选择
       this.dataJson.multipleSelection = []
       this.$refs.multipleTable.clearSelection()
-      // this.dataJson.currentJson.id = undefined
     },
     handleRowUpdate(row, _rowIndex) {
       this.dataJson.rowIndex = _rowIndex
@@ -423,6 +422,12 @@ export default {
           this.popSettings.one.props.data = deepCopy(this.dataJson.currentJson)
           this.popSettings.one.visible = true
           this.popSettings.one.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
+          break
+          // 顶部导航栏编辑
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
+          this.popSettings.six.props.data = deepCopy(this.dataJson.currentJson)
+          this.popSettings.six.visible = true
+          this.popSettings.six.props.dialogStatus = this.PARAMETERS.STATUS_UPDATE
           break
           // 结点编辑
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
@@ -478,6 +483,7 @@ export default {
       }).finally(() => {
         this.dataJson.currentJson = undefined
         this.settings.listLoading = false
+        this.$refs.multipleTable.setCurrentRow()
       })
     },
     // 重置查询区域
