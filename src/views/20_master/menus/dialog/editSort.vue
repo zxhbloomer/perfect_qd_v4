@@ -412,12 +412,32 @@ export default {
     allowDrop(draggingNode, dropNode, type) {
       // 不得放到根目录之后，平级
       switch (draggingNode.data.type) {
+        // 根结点
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
-          // 根结点
           return false
+        // 顶部导航栏
+        case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
+          switch (dropNode.data.type) {
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
+              return false
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
+              if (type === 'inner') {
+                return false
+              } else {
+                return true
+              }
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
+              return false
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
+              return false
+          }
+          break
+        // 结点
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
           switch (dropNode.data.type) {
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
+              return false
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
               if (type === 'inner') {
                 return true
               } else {
@@ -429,14 +449,25 @@ export default {
               return false
           }
           break
+        // 页面
         case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
           switch (dropNode.data.type) {
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_ROOT:
-              return true
+              return false
+            case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
+              if (type === 'inner') {
+                return true
+              } else {
+                return false
+              }
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE:
               return true
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_PAGE:
-              return false
+              if (type === 'inner') {
+                return false
+              } else {
+                return true
+              }
           }
           break
       }

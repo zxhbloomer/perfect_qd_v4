@@ -330,7 +330,7 @@ export default {
               this.settings.btnShowStatus.showAddSubNode = false
               this.settings.btnShowStatus.showAddSubMenu = false
               this.settings.btnShowStatus.showUpdate = false
-              this.settings.btnShowStatus.showRealyDelete = false
+              this.settings.btnShowStatus.showRealyDelete = true
               break
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
               // 顶部导航栏

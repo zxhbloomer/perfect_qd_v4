@@ -284,14 +284,13 @@ export default {
       this.dataJson.tempJson.code = ''
       this.dataJson.tempJson.son_count = this.dataJson.tempJson.son_count + 1
       this.dataJson.tempJson.path = ''
-      this.dataJson.tempJson.type = ''
       this.dataJson.tempJson.meta_title = ''
       this.dataJson.tempJson.meta_icon = ''
       this.dataJson.tempJson.route_name = ''
       this.dataJson.tempJson.component = ''
       this.dataJson.tempJson.name = ''
-      this.dataJson.tempJson.type_name = '结点'
-      this.dataJson.tempJson.type = this.CONSTANTS.DICT_SYS_MENU_TYPE_NODE
+      this.dataJson.tempJson.type_name = '顶部导航栏'
+      this.dataJson.tempJson.type = this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV
 
       // 设置按钮
       this.settings.btnShowStatus.showInsert = true
