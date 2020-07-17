@@ -1,4 +1,4 @@
-import { asyncRoutes, convertToOneRouter, constantRoutes } from '@/router'
+import { asyncRoutes, asyncRoutes2, convertToOneRouter, constantRoutes } from '@/router'
 import deepcopy from 'deep-copy'
 
 // import { constantRoutes } from '@/router'
@@ -83,13 +83,17 @@ const actions = {
       resolve(ar)
     })
   },
+  setRoutes({ commit }, routers) {
+    // 设置到vuex中是菜单树
+    commit('SET_ROUTES', routers)
+  },
   // 获取路由
   getTopNavAndRoutes({ commit }, roles) {
     return new Promise(resolve => {
       // TODO 此处修改，调试顶部导航栏
       const _topNav = [
         {
-          index: 1,
+          index: '1',
           type: 'T',
           meta: {
             icon: '系统管理',
@@ -99,17 +103,17 @@ const actions = {
           routers: asyncRoutes
         },
         {
-          index: 2,
+          index: '2',
           type: 'T',
           meta: {
             icon: 'syscode',
             name: '业务管理'
           },
           menus: null,
-          routers: asyncRoutes
+          routers: asyncRoutes2
         },
         {
-          index: 3,
+          index: '3',
           type: 'T',
           meta: {
             icon: 'syscode',

@@ -4,9 +4,10 @@
       <el-menu
         mode="horizontal"
         class="topnav"
+        :default-active="activeIndex"
         @select="handleSelect"
       >
-        <el-menu-item v-for="item in permission_topNav" :key="item.index">
+        <el-menu-item v-for="(item,index) in permission_topNav" :key="index" :index="item.index">
           <svg-icon :icon-class="item.meta.icon" />
           <span slot="title" style="margin-left: 5px">{{ item.meta.name }}</span>
         </el-menu-item>
@@ -30,7 +31,7 @@
   }
   .el-menu>.el-menu-item.is-active {
     color: #fff!important;
-    background-color: rgba(255, 255, 255, 0.1)!important;
+    background-color: rgba(0, 0, 0, 0.2)!important;
   }
   .el-menu>.el-menu-item:hover {
     color: #fff!important;
@@ -40,10 +41,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import store from '@/store'
 
 export default {
   data() {
     return {
+      activeIndex: undefined
     }
   },
   computed: {
@@ -54,10 +57,15 @@ export default {
   watch: {
   },
   created() {
+    this.activeIndex = this.permission_topNav[0].index
   },
   methods: {
     handleSelect(key, keyPath) {
-      console.log(key, keyPath)
+      if (this.permission_topNav[key - 1].index === this.activeIndex) {
+        return
+      }
+      store.dispatch('permission/setRoutes', this.permission_topNav[key - 1].routers)
+      this.activeIndex = this.permission_topNav[key - 1].index
     }
   }
 }

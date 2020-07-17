@@ -285,6 +285,184 @@ export const asyncRoutes = [
   }
 ]
 
+export const asyncRoutes2 = [
+  {
+    path: '/sys',
+    component: Layout,
+    redirect: 'noRedirect',
+    name: 'M00000010', // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
+    alwaysShow: true,
+    meta: {
+      title: '系统管理222',
+      icon: '系统管理',
+      noCache: true
+    },
+    children: [
+      { path: 'resource',
+        component: () => import('@/views/10_system/resource/resource'),
+        name: 'P00000020',
+        meta: { title: '资源管理', icon: '资源管理' }
+      },
+      { path: 'syscode',
+        component: () => import('@/views/00_platform/syscode/syscode'),
+        name: 'P00000180',
+        meta: { title: '系统编码', icon: 'syscode' }
+      },
+      { path: 'vue',
+        component: () => import('@/views/10_system/vuesetting/vue'),
+        name: 'P00000190',
+        meta: { title: 'vue页面维护', icon: 'syscode' }
+      },
+      { path: 'icons',
+        component: () => import('@/views/10_system/icons/icon'),
+        name: 'P00000230',
+        meta: { title: '系统icon', icon: 'icons' }
+      },
+      {
+        path: 'dic',
+        // component: subMenu,
+        redirect: 'noRedirect',
+        // name: 'M00000020', // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
+        alwaysShow: true,
+        meta: {
+          title: '字典管理',
+          icon: '字典管理',
+          noCache: true
+        },
+        children: [
+          { path: 'dicttype',
+            component: () => import('@/views/10_system/dicttype/dicttype'),
+            name: 'P00000030',
+            meta: { title: '字典类型' }
+          },
+          { path: 'dictdata',
+            component: () => import('@/views/10_system/dictdata/dictdata'),
+            name: 'P00000050',
+            meta: { title: '字典数据' }
+          }
+        ]
+      },
+      {
+        path: 'module',
+        // component: subMenu,
+        redirect: 'noRedirect',
+        // name: 'M00000020', // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
+        alwaysShow: true,
+        meta: {
+          title: '模块管理',
+          icon: '模块编辑',
+          noCache: true
+        },
+        children: [
+          { path: 'page',
+            component: () => import('@/views/10_system/module/module'),
+            name: 'P00000040',
+            meta: { title: '模块编辑' }
+          },
+          { path: 'button',
+            component: () => import('@/views/10_system/modulebutton/modulebutton'),
+            name: 'P00000041',
+            meta: { title: '模块按钮' }
+          }
+        ]
+      },
+      { path: 'config',
+        component: () => import('@/views/10_system/config/config'),
+        name: 'P00000060',
+        meta: { title: '系统参数', icon: '系统参数' }
+      },
+      { path: 'tenant',
+        component: () => import('@/views/10_system/tenant/tenant'),
+        name: 'P00000080',
+        meta: { title: '租户管理', icon: 'tenant' }
+      },
+      {
+        path: 'fun',
+        // component: subMenu,
+        redirect: 'noRedirect',
+        alwaysShow: true,
+        meta: { title: '功能操作管理', icon: 'pages', noCache: true },
+        children: [
+          {
+            path: 'funs',
+            component: () => import('@/views/10_system/pages/function/function'),
+            name: 'P00000220',
+            meta: { title: '按钮维护' }
+          },
+          {
+            path: 'pages',
+            component: () => import('@/views/10_system/pages/page/page'),
+            name: 'P00000200',
+            meta: { title: '页面维护' }
+          },
+          {
+            path: 'page_fun',
+            component: () => import('@/views/10_system/pages/page_function/page_function'),
+            name: 'P00000210',
+            meta: { title: '页面按钮维护' }
+          },
+          { path: 'menus',
+            component: () => import('@/views/20_master/menus/menu'),
+            name: 'P00000220',
+            meta: { title: '菜单维护' }
+          }
+        ]
+      },
+      {
+        path: 'org',
+        // component: subMenu,
+        redirect: 'noRedirect',
+        name: 'M00000020', // 设定路由的名字，一定要填写不然使用<keep-alive>时会出现各种问题
+        alwaysShow: true,
+        meta: { title: '组织机构', icon: '组织机构', noCache: true },
+        children: [
+          {
+            path: 'group',
+            component: () => import('@/views/20_master/group/group'),
+            name: 'P00000100',
+            meta: { title: '集团信息' }
+          },
+          {
+            path: 'company',
+            component: () => import('@/views/20_master/company/company'),
+            name: 'P00000110',
+            meta: { title: '企业信息' }
+          },
+          {
+            path: 'address',
+            component: () => import('@/views/20_master/address/address'),
+            name: 'P00000130',
+            meta: { title: '地址簿' }
+          },
+          {
+            path: 'staff',
+            component: () => import('@/views/20_master/staff/staff'),
+            name: 'P00000140',
+            meta: { title: '员工管理' }
+          },
+          {
+            path: 'dept',
+            component: () => import('@/views/20_master/dept/dept'),
+            name: 'P00000150',
+            meta: { title: '部门信息' }
+          },
+          {
+            path: 'position',
+            component: () => import('@/views/20_master/position/position'),
+            name: 'P00000160',
+            meta: { title: '岗位信息' }
+          },
+          { path: 'orginfo',
+            component: () => import('@/views/20_master/org/org'),
+            name: 'P00000170',
+            meta: { title: '组织机构管理' }
+          }
+        ]
+      }
+    ]
+  }
+]
+
 let asyncRoutesConvertToOneRouter = [
   {
     path: '/async',
