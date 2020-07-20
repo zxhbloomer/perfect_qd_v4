@@ -48,15 +48,15 @@
       @current-change="handleCurrentChange"
       @selection-change="handleSelectionChange"
     >
-      <el-table-column header-align="center" type="index" width="45" />
-      <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="name" label="菜单名称">
+      <el-table-column header-align="center" type="index" width="45" fixed />
+      <el-table-column header-align="center" show-overflow-tooltip min-width="250" prop="name" label="菜单名称" fixed>
         <template v-slot="scope">
           <svg-icon v-if="scope.row.meta_icon" :icon-class="scope.row.meta_icon" :class="scope.row.meta_icon" />
           {{ scope.row.name }}
         </template>
       </el-table-column>
-      <el-table-column header-align="center" show-overflow-tooltip min-width="60" prop="type_name" label="类型" />
-      <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="full_path" label="请求地址" />
+      <el-table-column header-align="center" show-overflow-tooltip min-width="160" prop="type_name" label="类型" fixed />
+      <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="full_path" label="请求地址" fixed />
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="150" prop="code" label="菜单编号" /> -->
       <!-- <el-table-column header-align="center" show-overflow-tooltip min-width="80" prop="type_name" label="菜单类型" /> -->
       <el-table-column header-align="center" label="按钮">
@@ -66,7 +66,7 @@
           align="center"
           :prop="button_column.code"
           :label="button_column.name"
-          min-width="25"
+          min-width="100"
         >
           <template v-slot="column_lists">
             <div v-for="item in column_lists.row.function_info" :key="item.id">
