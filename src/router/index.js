@@ -225,7 +225,7 @@ export const asyncRoutes = [
           },
           { path: 'menus',
             component: () => import('@/views/20_master/menus/menu'),
-            name: 'P00000220',
+            name: 'P00000240',
             meta: { title: '菜单维护' }
           }
         ]
