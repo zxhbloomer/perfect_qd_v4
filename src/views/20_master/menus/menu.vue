@@ -329,7 +329,7 @@ export default {
               this.settings.btnShowStatus.showAddTopNav = true
               this.settings.btnShowStatus.showAddSubNode = false
               this.settings.btnShowStatus.showAddSubMenu = false
-              this.settings.btnShowStatus.showUpdate = false
+              this.settings.btnShowStatus.showUpdate = true
               this.settings.btnShowStatus.showRealyDelete = true
               break
             case this.CONSTANTS.DICT_SYS_MENU_TYPE_TOPNAV:
@@ -569,8 +569,9 @@ export default {
       if (val.return_flag) {
         this.popSettings.one.visible = false
 
-        // 设置到table中绑定的json数据源
-        this.dataJson.listData.push(val.data.data)
+        // 设置到currentjson中
+        this.dataJson.currentJson = deepCopy(val.data.data)
+        this.getDataList()
         this.$notify({
           title: '新增菜单组处理成功',
           message: val.data.message,
@@ -591,10 +592,9 @@ export default {
       if (val.return_flag) {
         this.popSettings.one.visible = false
 
-        // 设置到table中绑定的json数据源
-        this.dataJson.listData.splice(this.dataJson.rowIndex, 1, val.data.data)
         // 设置到currentjson中
-        this.dataJson.currentJson = Object.assign({}, val.data.data)
+        this.dataJson.currentJson = deepCopy(val.data.data)
+        this.getDataList()
         this.$notify({
           title: '更新处理成功',
           message: val.data.message,

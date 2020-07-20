@@ -385,6 +385,7 @@ export default {
       this.dataJson.tempJson = deepCopy(this.data)
       this.dataJson.tempJsonOriginal = deepCopy(this.data)
       this.dataJson.tempJson.page_info = this.dataJson.tempJson.name + '(' + this.dataJson.tempJson.page_code + ')'
+      this.dataJson.tempJson.depth_id_array = this.dataJson.tempJson.parent_depth_id_array
       // 设置按钮
       this.settings.btnShowStatus.showUpdate = true
       // 控件focus

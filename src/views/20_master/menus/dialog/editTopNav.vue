@@ -306,6 +306,7 @@ export default {
       this.dataJson.tempJsonOriginal = deepCopy(this.data)
       this.dataJson.tempJson.parent_path = this.dataJson.tempJsonOriginal.parent_path
       this.dataJson.tempJson.full_path = this.dataJson.tempJsonOriginal.full_path
+      this.dataJson.tempJson.depth_id_array = this.dataJson.tempJson.parent_depth_id_array
       // 设置按钮
       this.settings.btnShowStatus.showUpdate = true
       // 控件focus
